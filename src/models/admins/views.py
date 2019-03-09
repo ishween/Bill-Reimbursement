@@ -21,7 +21,7 @@ def login_admin():
         try:
             if Admin.is_login_valid(email, password):
                 session['email'] = email
-                return redirect(url_for('.logout_admin'))
+                return redirect(url_for('.to_menu'))
         except adminErrors.AdminErrors as a:
             return a.message
 

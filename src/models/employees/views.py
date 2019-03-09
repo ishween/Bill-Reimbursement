@@ -67,8 +67,13 @@ def edit_employee(employee_id):
         designation = request.form['designation']
         monthly_salary = request.form['monthly_salary']
 
-        employee['designation'] = designation
-        employee['monthly_salary'] = monthly_salary
+        print(type(designation))
+        print(type(monthly_salary))
+
+        if designation != "":
+            employee.designation = designation
+        if monthly_salary != "":
+            employee.monthly_salary = monthly_salary
 
         employee.update_to_db()
         return redirect(url_for('admin.view_employees_admin'))
@@ -77,7 +82,7 @@ def edit_employee(employee_id):
 
 @employee_blueprint.route('/delete/<string:employee_id>', methods=['GET'])
 def delete_employee(employee_id):
-    Employee.get_by_id(employee_id).delete()
+    Employee.get_by_employee_id(employee_id).delete()
     return redirect(url_for('admin.view_employees_admin'))
 
 
