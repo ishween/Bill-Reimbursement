@@ -1,0 +1,111 @@
+{#{% extends "base.html" %}#}
+{#{% block content %}#}
+{##}
+{#    <h1>Bills Type</h1>#}
+{#    <div class="list-group">#}
+{#        <ol>#}
+{#            {% for department in response %}#}
+{#                <div class="container list-group-item-heading">#}
+{#                    <div class="display-4">#}
+{#                        <strong>{{ department['department_name'] }}</strong>#}
+{#                    </div>#}
+{#                    <div class="container list-group">#}
+{#                        <div class="employee list-group-item">#}
+{#                            <div class="col-sm-1 list-group-item-text">#}
+{#                                S.No.#}
+{#                            </div>#}
+{#                            <div class="col-sm-2 list-group-item-text">#}
+{#                                Name#}
+{#                            </div>#}
+{#                            <div class="col-sm-2 list-group-item-text">#}
+{#                                Reimbursement#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <br>#}
+{#                    <ol>#}
+{#                        {% for bill in department['bills_type'] %}#}
+{#                            <div class="list-group list-group-item">#}
+{#                                <div class="col-sm-1 list-group-item-text">#}
+{#                                    <li></li>#}
+{#                                </div>#}
+{#                                <div class="col-sm-2 list-group-item-text">#}
+{#                                    {{ bill['type'] }}#}
+{#                                </div>#}
+{#                                <div class="col-sm-2 list-group-item-text">#}
+{#                                    {{ bill['reimbursement'] }}#}
+{#                                </div>#}
+{#                            </div><br>#}
+{#                        {% endfor %}#}
+{#                    </ol>#}
+{#                </div>#}
+{#            {% endfor %}#}
+{#        </ol>#}
+{#    </div>#}
+{#    <a class="btn btn-success" href="{{ url_for('admin.add_a_bill_type') }}"><span class="glyphicon glyphicon-plus"></span> Add Bill</a>#}
+{#{% endblock %}#}
+{##}
+{#{% extends "base.html" %}#}
+{#{% block content %}#}
+{##}
+{#    <h1>Employees</h1>#}
+{#    <div class="list-group">#}
+{#        <ol>#}
+{#            {% for department in response %}#}
+{#                <div class="container">#}
+{#                    <div class="managers">#}
+{#                        {{ department['department_name'] }}#}
+{#                    </div>#}
+{#                    <div class="container">#}
+{#                        <div class="employee">#}
+{#                            <div class="col-sm-1">#}
+{#                                S.No.#}
+{#                            </div>#}
+{#                            <div class="col-sm-2">#}
+{#                                Name#}
+{#                            </div>#}
+{#                            <div class="col-sm-2">#}
+{#                                Email#}
+{#                            </div>#}
+{#                            <div class="col-sm-2">#}
+{#                                Designation#}
+{#                            </div>#}
+{#                            <div class="col-sm-2">#}
+{#                                Joining Date#}
+{#                            </div>#}
+{#                            <div class="col-sm-2">#}
+{#                                Monthly Salary#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <br>#}
+{#                    <ol>#}
+{#                        {% for employee in department['employees'] %}#}
+{#                            <div class="list-group">#}
+{#                                <div class="list-group-item-text">#}
+{#                                    <li></li>#}
+{#                                </div>#}
+{#                                <div class="list-group-item-text">#}
+{#                                    {{ employee['name'] }}#}
+{#                                </div>#}
+{#                                <div class="col-sm-2">#}
+{#                                    {{ employee['email'] }}#}
+{#                                </div>#}
+{#                                <div class="col-sm-2">#}
+{#                                    {{ employee['designation'] }}#}
+{#                                </div>#}
+{#                                <div class="col-sm-2">#}
+{#                                    {{ employee['date_of_joining'] }}#}
+{#                                </div>#}
+{#                                <div class="col-sm-2">#}
+{#                                    {{ employee['monthly_salary'] }}#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        {% endfor %}#}
+{#                    </ol>#}
+{#                </div>#}
+{#            {% endfor %}#}
+{#        </ol>#}
+{#    </div>#}
+{#    <a class="btn btn-success" href="{{ url_for('admin.add_employee') }}"><span class="glyphicon glyphicon-plus"></span> Add Employee</a>#}
+{#{% endblock %}#}

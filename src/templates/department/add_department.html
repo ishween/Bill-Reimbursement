@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Add Departments</h1>
+    <p>{{ user }}</p>
+    <div class="form">
+        <form method="post">
+            <div class="form-group">
+                <label for="department_name">Department</label>
+                <input type="text" class="form-control" id="department_name" name="name" placeholder="Name of Department">
+            </div>
+            <button type="submit" class="btn btn-default">Create</button>
+        </form>
+    </div>
+{% endblock %}

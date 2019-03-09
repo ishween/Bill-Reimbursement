@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="form">
+        <form action="{{ url_for('admin.register_admin') }}" method="post">
+            <div class="form-group">
+                <label for="company_name">Company Name</label>
+                <input type="text" class="form-control is-invalid" id="company_name" name="company_name" placeholder="Company">
+                {#                   <div class="invalid-feedback">#}
+                {#                        Please Enter Company's Name.#}
+                {#                    </div>#}
+            </div>
+            <div class="form-group">
+                <label for="CEO">CEO</label>
+                <input type="text" class="form-control is-invalid" id="CEO" name="ceo" placeholder="CEO" required>
+                {#                <div class="invalid-feedback">#}
+                {#                    Please Enter CEO of the Company.#}
+                {#                </div>#}
+            </div>
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control id-invalid" id="email" name="email" placeholder="Email" required>
+                {#                <div class="invalid-feedback">#}
+                {#                    Please Enter an email address.#}
+                {#                </div>#}
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="********" required>
+                {#                <div class="invalid-feedback">#}
+                {#                    Please Enter a password.#}
+                {#                </div>#}
+            </div>
+            <div class="form-group">
+                <label for="contact">Contact Number</label>
+                <input type="tel" class="form-control" id="contact" name="contact" placeholder="Contact Number" required>
+                {#                <div class="invalid-feedback">#}
+                {#                    Please Enter Contact Number.#}
+                {#                </div>#}
+            </div>
+            <div class="form-group">
+                <label for="gst_no">GST Number</label>
+                <input type="number" class="form-control" id="gst_no" name="gst_no" placeholder="GST Number">
+                {#                <div class="invalid-feedback">#}
+                {#                    Please Enter GST number.#}
+                {#                </div>#}
+            </div>
+            <center><button type="submit" class="btn btn-info">Register your Company</button></center>
+        </form>
+    </div>
+{% endblock %}

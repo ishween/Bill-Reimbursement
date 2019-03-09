@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <h1>Managers</h1>
+    <div class="list-group">
+        <div class="container">
+            <div class="manager">
+                <div class="col-sm-2">
+                    S.No.
+                </div>
+                <div class="col-sm-3">
+                    Manager's name
+                </div>
+                <div class="col-sm-3">
+                    Manager's email
+                </div>
+                <div class="col-sm-3">
+                    Manager's designation
+                </div>
+            </div>
+        </div>
+        <br>
+        <ol>
+            {% for manager in managers %}
+                <div class="container">
+                    <div class="managers">
+                        <div class="col-sm-2">
+                            <li></li>
+                        </div>
+                        <div class="col-sm-3">
+                            {{ manager.name }}
+                        </div>
+                        <div class="col-sm-3">
+                            {{ manager.email }}
+                        </div>
+                        <div class="col-sm-3">
+                            {{ manager.designation }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </ol>
+    </div>
+    <a class="btn btn-success" href="{{ url_for('admin.add_a_manager') }}"><span class="glyphicon glyphicon-plus"></span> Add Manager</a>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <h1> Add Bill Type </h1>
+    <div class="form">
+        <form method="post">
+            <div class="form-group">
+                <label for="type">Name</label>
+                <input type="text" class="form-control" id="type" name="type" placeholder="Type">
+            </div>
+            <div class="form-group">
+                <label for="reimbursement">Reimbursement Amount</label>
+                <input type="text" class="form-control" id="reimbursement" name="reimbursement" placeholder="Amount">
+            </div>
+            <div class="form-group">
+                <span class="input-group-addon">Select Department</span>
+                <label>
+                    <select name="department_id" class="selectpicker form-control">
+                        {% for department in departments %}
+                            <option value="{{ department._id }}">{{ department.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+            <center><button type="submit" class="btn btn-success">Add Bill Type</button></center>
+        </form>
+    </div>
+{% endblock %}

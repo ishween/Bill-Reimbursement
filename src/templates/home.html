@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+    <!--<div class="jumbotron">-->
+    <h1 class="display-4">Bill Reimbursement</h1><br>
+    <div class="container">
+        <div class = "register/login">
+            <div class="col-sm-6">
+                <h3>Register with us</h3><br>
+                <a href="{{ url_for('admin.register_admin') }}"><button type="button" class="btn btn-light">Register Company</button></a>
+            </div>
+            <div class="col-sm-6">
+                <h3>Login with us</h3><br>
+                <a href="{{ url_for('admin.login_admin') }}"><button type="button" class="btn btn-light">Login Admin</button></a>
+                <a href="{{ url_for('employees.login_employee') }}"><button type="button" class="btn btn-light">Login Employee</button></a>
+                <a href="{{ url_for('manager.login_manager') }}"><button type="button" class="btn btn-light">Login Manager</button></a>
+            </div>
+        </div>
+    </div>
+    <!--</div>-->
+{% endblock %}
