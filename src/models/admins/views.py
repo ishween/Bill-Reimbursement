@@ -112,7 +112,21 @@ def add_a_bill_type():
 def view_managers_admin():
     company_id = Admin.get_by_email(session['email'])
     managers = view_managers(company_id)
-    return render_template('managers/show_managers.html', managers=managers)
+    departments = view_departments(company_id)
+    response = []
+    for department in departments:
+        res={}
+        dept = department['_id']
+        res['department_id'] = dept
+        res['department_name'] = department['name']
+        res['managers'] = []
+        print(dept)
+        for manager in managers:
+            #print(manager['department_id'])
+            if manager['department_id'] == dept:
+                res['managers'].append(manager)
+        response.append(res)
+    return render_template('managers/show_managers.html', response=response)
 
 
 @admin_blueprint.route('/addManager', methods=['GET', 'POST'])
