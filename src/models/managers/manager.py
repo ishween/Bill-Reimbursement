@@ -48,8 +48,8 @@ class Manager(object):
         Database.delete(managerConstants.COLLECTION, {'_id':self._id})
 
     @classmethod
-    def get_by_id(cls, company_id):
-        return Database.find(managerConstants.COLLECTION, {'company_id': company_id})
+    def get_by_id(cls, _id):
+        return cls(**Database.find(managerConstants.COLLECTION, {'_id': _id}))
 
     @classmethod
     def all(cls):
