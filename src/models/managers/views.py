@@ -18,12 +18,16 @@ def login_manager():
         try:
             if Manager.is_login_valid(email, password):
                 session['email'] = email
-                #return redirect(url_for('.user_alerts'))
-                print("login")
+                return redirect(url_for('.to_menu'))
         except managerErrors.ManagerError as a:
             return a.message
 
-    #return  render_template('users/login.html')
+    return render_template('managers/login_manager.html')
+
+
+@manager_blueprint.route('/manager', methods=['GET'])
+def to_menu():
+    return render_template('managers/manager_menu.html')
 
 
 #@manager_blueprint.route('/admin/addManager', methods = ['GET', 'POST'])
