@@ -1,45 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
-
     <h1>Managers</h1>
-    <div class="list-group">
-        <div class="container">
-            <div class="manager">
-                <div class="col-sm-2">
-                    S.No.
-                </div>
-                <div class="col-sm-3">
-                    Manager's name
-                </div>
-                <div class="col-sm-3">
-                    Manager's email
-                </div>
-                <div class="col-sm-3">
-                    Manager's designation
-                </div>
-            </div>
-        </div>
-        <br>
-        <ol>
-            {% for manager in managers %}
-                <div class="container">
-                    <div class="managers">
-                        <div class="col-sm-2">
-                            <li></li>
-                        </div>
-                        <div class="col-sm-3">
-                            {{ manager.name }}
-                        </div>
-                        <div class="col-sm-3">
-                            {{ manager.email }}
-                        </div>
-                        <div class="col-sm-3">
-                            {{ manager.designation }}
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </ol>
-    </div>
+    {% for department in response %}
+        <h4>{{ department['department_name'] }}</h4>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Designation</th>
+                    <th scope="col">Joining Date</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for manager in department['managers'] %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td>{{ manager['name'] }}</td>
+                        <td>{{ manager['email'] }}</td>
+                        <td>{{ manager['designation'] }}</td>
+                        <td>{{ manager['date_of_joining'] }}</td>
+                        <td><a class="btn btn-success" href="{{ url_for('manager.edit_manager', manager_id=manager['_id']) }}"> Edit Manager</a></td>
+                        <td><a class="btn btn-success" href="{{ url_for('manager.delete_manager', manager_id=manager['_id']) }}">Delete Manager</a> </td>
+                    </tr>
+                 {% endfor %}
+            <tbody>
+        </table>
+    {% endfor %}
     <a class="btn btn-success" href="{{ url_for('admin.add_a_manager') }}"><span class="glyphicon glyphicon-plus"></span> Add Manager</a>
 {% endblock %}

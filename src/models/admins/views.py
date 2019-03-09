@@ -4,8 +4,8 @@ import src.models.admins.errors as adminErrors
 from src.models.admins.admin import Admin
 from src.models.department.views import add_department, view_departments
 from src.models.billTypes.views import add_bill_type, delete_bill_type, get_bills_type_by_department
-from src.models.managers.views import add_manager, delete_manager, view_managers
-from src.models.employees.views import add_an_employee, delete_employee, get_employees
+from src.models.managers.views import add_manager, delete_manager, view_managers, get_managers_by_department
+from src.models.employees.views import add_an_employee, delete_employee, get_employees, get_by_department_id
 
 __author__ = 'ishween'
 
@@ -111,8 +111,21 @@ def add_a_bill_type():
 @admin_blueprint.route('/viewManagers', methods=['GET'])
 def view_managers_admin():
     company_id = Admin.get_by_email(session['email'])
-    managers = view_managers(company_id)
-    return render_template('managers/show_managers.html', managers=managers)
+    #managers = view_managers(company_id)
+    departments = view_departments(company_id)
+    response = []
+    for department in departments:
+        res={}
+        dept = department['_id']
+        res['department_id'] = dept
+        res['department_name'] = department['name']
+        res['managers'] = []
+        print(dept)
+        managers = get_managers_by_department(dept)
+        for manager in managers:
+            res['managers'].append(manager)
+        response.append(res)
+    return render_template('managers/show_managers.html', response=response)
 
 
 @admin_blueprint.route('/addManager', methods=['GET', 'POST'])
@@ -135,7 +148,6 @@ def add_a_manager():
 @admin_blueprint.route('/viewEmployees', methods=['GET'])
 def view_employees_admin():
     company_id = Admin.get_by_email(session['email'])
-    employees = get_employees(company_id)
     departments = view_departments(company_id)
     response = []
     for department in departments:
@@ -143,6 +155,7 @@ def view_employees_admin():
         res['department_id'] = department['_id']
         res['department_name'] = department['name']
         res['employees'] = []
+        employees = get_by_department_id(department['_id'])
         for employee in employees:
             if employee['department_id'] == department['_id']:
                 res['employees'].append(employee)

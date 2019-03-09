@@ -47,7 +47,7 @@ def edit_bill_type(billType_id):
     return render_template('bill_types/edit_bill.html')
 
 
-@billType_blueprint.route('/delete/<string:billType_id>', methods=['GET'])
+@billType_blueprint.route('/deleteBillType/<string:billType_id>', methods=['GET'])
 def delete_bill_type(billType_id):
     BillType.get_by_id(billType_id).delete()
     return redirect(url_for('admin.view_bill_types_admin'))

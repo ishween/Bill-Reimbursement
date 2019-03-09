@@ -70,3 +70,7 @@ class Employee(object):
 
     def update_to_db(self):
         Database.update(employeeConstants.COLLECTION, {'_id':self._id}, self.json())
+
+    @classmethod
+    def get_by_department_id(cls, department_id):
+        return Database.find(employeeConstants.COLLECTION, {'department_id': department_id})
