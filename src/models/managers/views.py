@@ -60,10 +60,11 @@ def edit_manager(manager_id):
         return redirect(url_for('admin.view_managers_admin'))
     return render_template('managers/edit_manager.html')
 
-@manager_blueprint.route('/delete/<string:manager_id>', methods = ['GET'])
+
+@manager_blueprint.route('/deleteManager/<string:manager_id>', methods = ['GET'])
 def delete_manager(manager_id):
-    Manager.get_by_id(manager_id).delete()
-    redirect(url_for('admin.view_managers_admin'))
+    Manager.get_by_manager_id(manager_id).delete()
+    return redirect(url_for('admin.view_managers_admin'))
 
 @manager_blueprint.route('/manager/logout')
 def logout_admin():
@@ -81,4 +82,9 @@ def view_managers(company_id):
     # for man in managers:
     #     print(man._id)
     #print(managers)
+    return managers
+
+
+def get_managers_by_department(department_id):
+    managers = Manager.get_by_department_id(department_id)
     return managers

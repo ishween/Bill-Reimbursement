@@ -80,7 +80,7 @@ def edit_employee(employee_id):
     return render_template('employees/edit_employee.html')
 
 
-@employee_blueprint.route('/delete/<string:employee_id>', methods=['GET'])
+@employee_blueprint.route('/deleteEmployee/<string:employee_id>', methods=['GET'])
 def delete_employee(employee_id):
     Employee.get_by_employee_id(employee_id).delete()
     return redirect(url_for('admin.view_employees_admin'))
@@ -114,4 +114,8 @@ def edit_a_bill(bill_id):
 def get_employees(company_id):
     employees = Employee.get_by_id(company_id)
     print(employees)
+    return employees
+
+def get_by_department_id(department_id):
+    employees = Employee.get_by_department_id(department_id)
     return employees

@@ -47,7 +47,8 @@ class Manager(object):
         }
 
     def delete(self):
-        Database.delete(managerConstants.COLLECTION, {'_id':self._id})
+        print(Database.find_one(managerConstants.COLLECTION, {'_id': self._id}))
+        Database.delete(managerConstants.COLLECTION, {'_id': self._id})
 
     @classmethod
     def get_by_id(cls, company_id):
@@ -63,3 +64,8 @@ class Manager(object):
 
     def update_to_db(self):
         Database.update(managerConstants.COLLECTION, {'_id':self._id}, self.json())
+
+    @classmethod
+    def get_by_department_id(cls, department_id):
+        managers = Database.find(managerConstants.COLLECTION, {'department_id': department_id})
+        return managers
