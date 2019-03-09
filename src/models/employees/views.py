@@ -113,4 +113,5 @@ def edit_a_bill(bill_id):
 
 def get_employees(company_id):
     employees = Employee.get_by_id(company_id)
+    print(employees)
     return employees

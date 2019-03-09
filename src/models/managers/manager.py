@@ -6,13 +6,13 @@ from src.db.utils import Utils
 
 
 class Manager(object):
-    def __init__(self, company_id, email, password, name, designation, department, date_of_joining, _id=None):
+    def __init__(self, company_id, email, password, name, designation, department_id, date_of_joining, _id=None):
         self.company_id = company_id
         self.email = email
         self.password = password
         self.name = name
         self.designation = designation
-        self.department = department
+        self.department_id = department_id
         self.date_of_joining = date_of_joining
         self._id = uuid.uuid4().hex if _id is None else _id
 
@@ -25,9 +25,10 @@ class Manager(object):
             raise ManagerError.IncorrectPasswordError("You entered wrong password!")
         return True
 
-    def add_a_manager(company_id, email, name, designation, department, date_of_joining):
+    def add_a_manager(company_id, email, name, designation, department_id, date_of_joining):
         password = managerConstants.password_generator()
-        Manager(company_id, email, Utils.hash_password(password), name, designation, department, date_of_joining).save_to_db()
+        Manager(company_id, email, Utils.hash_password(password), name, designation, department_id, date_of_joining).save_to_db()
+        print(password)
         managerConstants.send_email(email, password)
 
     def save_to_db(self):
@@ -35,12 +36,13 @@ class Manager(object):
 
     def json(self):
         return {
+            "_id": self._id,
             "company_id": self.company_id,
             "email": self.email,
             "password": self.password,
             "name": self.name,
             "designation": self.designation,
-            "department": self.department,
+            "department_id": self.department_id,
             "date_of_joining": self.date_of_joining
         }
 
@@ -48,9 +50,16 @@ class Manager(object):
         Database.delete(managerConstants.COLLECTION, {'_id':self._id})
 
     @classmethod
-    def get_by_id(cls, _id):
-        return cls(**Database.find(managerConstants.COLLECTION, {'_id': _id}))
+    def get_by_id(cls, company_id):
+        return Database.find(managerConstants.COLLECTION, {'company_id': company_id})
+
+    @classmethod
+    def get_by_manager_id(cls, _id):
+        return cls(**Database.find_one(managerConstants.COLLECTION, {'_id': _id}))
 
     @classmethod
     def all(cls):
         return [cls(**elem) for elem in Database.find(managerConstants.COLLECTION, {})]
+
+    def update_to_db(self):
+        Database.update(managerConstants.COLLECTION, {'_id':self._id}, self.json())
