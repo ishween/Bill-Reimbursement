@@ -47,8 +47,24 @@ def add_manager(company_id, email, name, designation, department_id, date_of_joi
 def show_all_bills(department_id, status):
     show_bills(department_id, status)
 
+@manager_blueprint.route('/editManager/<string:manager_id>', methods = ['POST'])
+def edit_manager(manager_id):
+    manager = Manager.get_by_id(manager_id)
+
+    if request.method == 'POST':
+        designation = request.method['designation']
+
+        manager.designation = designation
+
+        manager.update_to_db()
+        redirect(url_for('admin.view_managers_admin'))
+
+    render_template('managers/edit_manager.html')
+
+
 def delete_manager(manager_id):
     Manager.get_by_id(manager_id).delete()
+    redirect(url_for('admin.view_managers_admin'))
 
 @manager_blueprint.route('/manager/logout')
 def logout_admin():
