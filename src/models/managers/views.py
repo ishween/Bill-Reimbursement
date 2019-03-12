@@ -2,7 +2,7 @@ from flask import Blueprint, request, session, url_for, render_template
 from werkzeug.utils import redirect
 import src.models.managers.error as managerErrors
 from src.models.managers.manager import Manager
-from src.models.bills.views import show_bills, change_status
+from src.models.bills.views import change_status
 
 __author__ = 'ishween'
 
@@ -47,9 +47,9 @@ def add_manager(company_id, email, name, designation, department_id, date_of_joi
     Manager.add_a_manager(company_id, email, name, designation, department_id, date_of_joining)
 
 
-@manager_blueprint.route('/show_all_bills/<string:department_id>/<string:status>', methods = ['GET'])
-def show_all_bills(department_id, status):
-    show_bills(department_id, status)
+# @manager_blueprint.route('/show_all_bills/<string:department_id>/<string:status>', methods = ['GET'])
+# def show_all_bills(department_id, status):
+#     show_bills(department_id, status)
 
 
 @manager_blueprint.route('/editManager/<string:manager_id>', methods = ['GET', 'POST'])

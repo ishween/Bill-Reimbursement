@@ -74,3 +74,8 @@ class Employee(object):
     @classmethod
     def get_by_department_id(cls, department_id):
         return Database.find(employeeConstants.COLLECTION, {'department_id': department_id})
+
+    @classmethod
+    def get_by_employee_email(cls, email):
+        employee = Database.find_one(employeeConstants.COLLECTION, {'email': email})
+        return employee

@@ -18,7 +18,7 @@ def login_employee():
         try:
             if Employee.is_login_valid(email, password):
                 session['email'] = email
-                return redirect(url_for('.to_menu'))
+                return redirect(url_for('bills.view_bills'))
         except employeeErrors.EmployeeError as a:
             return a.message
 
@@ -27,7 +27,7 @@ def login_employee():
 
 @employee_blueprint.route('/employee', methods = ['GET'])
 def to_menu():
-    return render_template('employees/employee_menu.html')
+    return render_template('employees/view_bills.html')
 
 # @employee_blueprint.route('/addEmployee', methods = ['GET', 'POST'])
 # def add_employee():
