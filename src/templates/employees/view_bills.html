@@ -25,8 +25,8 @@
                             <td><a class="btn btn-success" href="{{ url_for('bills.edit_bill', bill_id=bill['_id']) }}"> Edit Bill</a></td>
                             <td><a class="btn btn-success" href="{{ url_for('bills.delete_bill', bill_id=bill['_id']) }}">Delete Bill</a> </td>
                         {% else %}
-                            <td><a class="btn btn-success" href="#"> Edit Bill </a></td>
-                            <td><a class="btn btn-success" href="#"> Delete Bill </a></td>
+                            <td><button type="button" class="btn btn-success" disabled> Edit Bill </button></td>
+                            <td><button type="button" class="btn btn-success" disabled> Delete Bill </button></td>
                         {% endif %}
                     </tr>
                  {% endfor %}

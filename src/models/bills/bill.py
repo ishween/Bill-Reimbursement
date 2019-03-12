@@ -43,7 +43,7 @@ class Bill(object):
 
     @classmethod
     def all_bills(cls, department_id, status):
-        return [cls(**elem) for elem in Database.find(billConstant.COLLECTION, {'department_id': department_id, 'status': status})]
+        return Database.find(billConstant.COLLECTION, {'department_id': department_id, 'status': status})
 
     @classmethod
     def all_bills_for_employee(cls, employee_id):
