@@ -22,8 +22,8 @@ class Employee(object):
                                       self.monthly_salary)
 
     def is_login_valid(email, password):
-        employee_data = Database.find_one(employeeConstants.COLLECTION, {"email": email})
-        print(employee_data['password'])
+        employee_data = Database.find_one(employeeConstants.COLLECTION, {'email': email})
+        #print(employee_data['password'])
 
         if employee_data is None:
             raise EmployeeError.EmployeeNotExistError("You are not registered yet!")
@@ -74,3 +74,8 @@ class Employee(object):
     @classmethod
     def get_by_department_id(cls, department_id):
         return Database.find(employeeConstants.COLLECTION, {'department_id': department_id})
+
+    @classmethod
+    def get_by_employee_email(cls, email):
+        employee = Database.find_one(employeeConstants.COLLECTION, {'email': email})
+        return employee
