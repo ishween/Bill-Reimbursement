@@ -4,6 +4,7 @@ from src.models.bills.constants import send_email
 from src.models.employees.employee import Employee
 from src.models.billTypes.billType import BillType
 from src.models.managers.manager import Manager
+from src.models.department.department import Department
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 
@@ -104,7 +105,21 @@ def view_bills_to_manager():
     email = session['email']
     manager = Manager.get_by_manager_email(email)
     bills = Bill.all_bills(manager['department_id'], "pending")
-    return render_template('managers/view_bills.html', bills=bills)
+    response = []
+    for bill in bills:
+        res = {}
+        res['bill_type'] = bill['bill_type']
+        res['bill_image_url'] = bill['bill_image_url']
+        res['date_of_submission'] = bill['date_of_submission']
+        res['status'] = bill['status']
+        employee_id = bill['employee_id']
+        employee = Employee.get_by_employee_id(employee_id)
+        res['employee_name'] = employee.name
+        res['employee_designation'] = employee.designation
+        department = Department.get_by_id(bill['department_id'])
+        res['department_name'] = department['name']
+        response.append(res)
+    return render_template('managers/view_bills.html', response=response)
 
 
 @bill_blueprint.route('/manager/accept/<string:bill_id>', methods=['GET', 'POST'])

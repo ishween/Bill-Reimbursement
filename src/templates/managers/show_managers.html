@@ -5,28 +5,28 @@
         <h4>{{ department['department_name'] }}</h4>
         <table class="table table-hover">
             <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Designation</th>
-                    <th scope="col">Joining Date</th>
-                    <th scope="col">Edit</th>
-                    <th scope="col">Delete</th>
-                </tr>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Designation</th>
+                <th scope="col">Joining Date</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
             </thead>
             <tbody>
-                {% for manager in department['managers'] %}
-                    <tr>
-                        <th scope="row">{{ loop.index }}</th>
-                        <td>{{ manager['name'] }}</td>
-                        <td>{{ manager['email'] }}</td>
-                        <td>{{ manager['designation'] }}</td>
-                        <td>{{ manager['date_of_joining'] }}</td>
-                        <td><a class="btn btn-success" href="{{ url_for('manager.edit_manager', manager_id=manager['_id']) }}"> Edit Manager</a></td>
-                        <td><a class="btn btn-success" href="{{ url_for('manager.delete_manager', manager_id=manager['_id']) }}">Delete Manager</a> </td>
-                    </tr>
-                 {% endfor %}
+            {% for manager in department['managers'] %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ manager['name'] }}</td>
+                    <td>{{ manager['email'] }}</td>
+                    <td>{{ manager['designation'] }}</td>
+                    <td>{{ manager['date_of_joining'] }}</td>
+                    <td><a class="btn btn-warning" href="{{ url_for('manager.edit_manager', manager_id=manager['_id']) }}"> Edit Manager</a></td>
+                    <td><a class="btn btn-danger" href="{{ url_for('manager.delete_manager', manager_id=manager['_id']) }}">Delete Manager</a> </td>
+                </tr>
+            {% endfor %}
             <tbody>
         </table>
     {% endfor %}
