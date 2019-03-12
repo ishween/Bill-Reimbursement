@@ -7,7 +7,7 @@
             <div class="form-group">
                 <span class="input-group-addon">Select Bill Type</span>
                 <label>
-                    <select name="type" class="selectpicker form-control">
+                    <select name="type" class="selectpicker form-control" data-width="100%">
                         {% for billType in bill_types %}
                             <option value="{{ billType.type }}">{{ billType.type }}</option>
                         {% endfor %}
@@ -17,7 +17,7 @@
             <div class="form-group">
                 <input type="file" name="file">
             </div>
-        <center><button type="submit" class="btn btn-info">Edit Bill </button></center>
+        <center><button type="submit" class="btn btn-warning">Edit Bill </button></center>
         </form>
     </div>
 {% endblock %}
