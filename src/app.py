@@ -15,13 +15,16 @@ def db_initialize():
 def home():
     return render_template('home.html')
 
+
 from src.models.admins.views import admin_blueprint
 from src.models.employees.views import employee_blueprint
 from src.models.managers.views import manager_blueprint
 from src.models.billTypes.views import billType_blueprint
+from src.models.bills.views import bill_blueprint
 app.register_blueprint(admin_blueprint, url_prefix='/admin')
 app.register_blueprint(employee_blueprint)
 app.register_blueprint(manager_blueprint)
 app.register_blueprint(billType_blueprint, url_prefix='/billType')
+app.register_blueprint(bill_blueprint, url_prefix='/bill')
 
 

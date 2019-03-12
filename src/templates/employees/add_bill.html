@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Add Bill</h1>
+    <div class="form">
+        <form method="post" enctype="multipart/form-data">
+            <div class="from-group">
+                <label class="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="{{ employee_name }}" disabled>
+            </div>
+            <div class="form-group">
+                <span class="input-group-addon">Select Bill Type</span>
+                <label>
+                    <select name="type" class="selectpicker form-control">
+                        {% for billType in bill_types %}
+                            <option value="{{ billType.type }}">{{ billType.type }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="date-of-submission">Submission</label>
+                <input type="date" class="form-control" id="date-of-submission" name="date_of_submission" placeholder="dd/mm/yy">
+            </div>
+            <div class="form-group">
+                <input type="file" name="file">
+{#                <input type="submit" value="Upload">#}
+
+{#            {% if thumbnail_url1 %}#}
+{#                <h5>Bill:</h5>#}
+{#                <div><a href="{{ url }}">{{ thumbnail_url1 }}</a></div>#}
+{#                <img src="{{ thumbnail_url1 }}"/>#}
+{#            {% endif %}#}
+            </div>
+        <center><button type="submit" class="btn btn-info">Submit</button> </center>
+        </form>
+    </div>
+{% endblock %}
