@@ -69,3 +69,8 @@ class Manager(object):
     def get_by_department_id(cls, department_id):
         managers = Database.find(managerConstants.COLLECTION, {'department_id': department_id})
         return managers
+
+    @classmethod
+    def get_by_manager_email(cls, email):
+        employee = Database.find_one(managerConstants.COLLECTION, {'email': email})
+        return employee
