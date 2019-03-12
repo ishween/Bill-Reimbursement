@@ -18,7 +18,7 @@ def login_manager():
         try:
             if Manager.is_login_valid(email, password):
                 session['email'] = email
-                return redirect(url_for('.to_menu'))
+                return redirect(url_for('bills.view_bills_to_manager'))
         except managerErrors.ManagerError as a:
             return a.message
 

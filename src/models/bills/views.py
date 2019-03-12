@@ -3,6 +3,7 @@ from src.models.bills.bill import Bill
 from src.models.bills.constants import send_email
 from src.models.employees.employee import Employee
 from src.models.billTypes.billType import BillType
+from src.models.managers.manager import Manager
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 
@@ -96,3 +97,42 @@ def edit_bill(bill_id):
         bill.update_to_db()
 
     return render_template('employees/edit_bill.html', bill_types=bill_types)
+
+
+@bill_blueprint.route('/manager/viewBills', methods=['GET'])
+def view_bills_to_manager():
+    email = session['email']
+    manager = Manager.get_by_manager_email(email)
+    bills = Bill.all_bills(manager['department_id'], "pending")
+    return render_template('managers/view_bills.html', bills=bills)
+
+
+@bill_blueprint.route('/manager/accept/<string:bill_id>', methods=['GET', 'POST'])
+def accept_bill(bill_id):
+    bill = Bill.get_by_id(bill_id)
+    employee_id = bill.employee_id
+    employee_email = Employee.get_by_employee_id(employee_id)
+    # if request.method == 'POST':
+    print("yes")
+    reimburse_amount = request.form['reimburse']
+
+    send_email(employee_email.email, reimburse_amount, "accept")
+
+    bill.status = "accept"
+    bill.update_to_db()
+    bill = Bill.get_by_id(bill_id)
+    print(bill)
+    return redirect(url_for('.view_bills_to_manager'))
+
+
+@bill_blueprint.route('/manager/reject/<string:bill_id>', methods=['GET'])
+def reject_bill(bill_id):
+    bill = Bill.get_by_id(bill_id)
+    employee_id = bill.employee_id
+    email = Employee.get_by_employee_id(employee_id)
+    send_email(email.email, 0, "reject")
+
+    bill.status = "reject"
+    bill.update_to_db()
+
+    return redirect(url_for('.view_bills_to_manager'))
