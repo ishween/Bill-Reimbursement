@@ -5,14 +5,16 @@
             <select class="selectpicker glyphicon glyphicon-sort" onchange="location = this.value;">
                 <option>Sort</option>
                 <option value="{{ url_for('admin.view_bill_types_admin', sort_type="default", filter_type=filter_type) }}">{{ "Default" }}</option>
-                <option value="{{ url_for('admin.view_bill_types_admin', sort_type="type", filter_type=filter_type) }}">{{ "Type" }}</option>
+                <option value="{{ url_for('admin.view_bill_types_admin', sort_type="type", filter_type=filter_type) }}">{{ "Name" }}</option>
             </select>
         </label>
         <label class="input-group-addon glyphicon glyphicon-filter" style="width: 50px;">
             <select class="selectpicker" onchange="location = this.value;" aria-live="polite">
                 <option class="glyphicon glyphicon-filter">Filter</option>
                 <option value="{{ url_for('admin.view_bill_types_admin', sort_type=sort_type, filter_type="default") }}">{{ "All" }}</option>
-                <option value="{{ url_for('admin.view_bill_types_admin', sort_type=sort_type, filter_type="type") }}">{{ "Pending" }}</option>
+                {% for type in types %}
+                    <option value="{{ url_for('admin.view_bill_types_admin', sort_type=sort_type, filter_type=type) }}">{{ type }}</option>
+                {% endfor %}
                 </select>
         </label>
 

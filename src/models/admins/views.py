@@ -82,20 +82,33 @@ def view_bill_types_admin(sort_type, filter_type):
     company_id = Admin.get_by_email(session['email'])
     departments = view_departments(company_id)
     response = []
+    types = []
     for department in departments:
         res={}
         res['department_id'] = department['_id']
         res['department_name'] = department['name']
         res['bills_type'] = []
-        bills_type = get_bills_type_by_department(department['_id'], filter_type)
+        billtypes = []
+
+        bills_type = get_bills_type_by_department(department['_id'])
+
         for billtype in bills_type:
-            res['bills_type'].append(billtype)
-        res = sorted(res, key=lambda k: k[sort_type])
+            if filter_type != "default" and filter_type == billtype['type']:
+                billtypes.append(billtype)
+            elif filter_type == "default":
+                billtypes.append(billtype)
+            if billtype['type'] not in types:
+                types.append(billtype['type'])
+
+        if sort_type != "default":
+            res['bills_type'] = sorted(billtypes, key=lambda k: k[sort_type])
+        else:
+            res['bills_type'] = billtypes
         response.append(res)
 
     response = sorted(response, key=lambda k: k['department_name']) #alphabetical order
 
-    return render_template('bill_types/show_bills.html', response=response)
+    return render_template('bill_types/show_bills.html', response=response, types=types, sort_type=sort_type, filter_type=filter_type)
 
 
 @admin_blueprint.route('/addBillType', methods=['GET', 'POST'])

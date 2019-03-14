@@ -53,23 +53,13 @@ def delete_bill_type(billType_id):
     return redirect(url_for('admin.view_bill_types_admin'))
 
 
-def get_bills_type_by_department(department_id, filter_type):
+def get_bills_type_by_department(department_id):
     billTypes = BillType.all(department_id)
     response = []
-
-    if filter_type == "default":
-        for b in billTypes:
-            res = {}
-            res['_id'] = b._id
-            res['type'] = b.type
-            res['reimbursement'] = b.reimbursement
-            response.append(res)
-    else:
-        for b in billTypes:
-            if b.type == filter_type:
-                res = {}
-                res['_id'] = b._id
-                res['type'] = b.type
-                res['reimbursement'] = b.reimbursement
-                response.append(res)
+    for b in billTypes:
+        res = {}
+        res['_id'] = b._id
+        res['type'] = b.type
+        res['reimbursement'] = b.reimbursement
+        response.append(res)
     return response
