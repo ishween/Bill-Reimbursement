@@ -1,16 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <div>
+
         <h1>Bills</h1>
-    <label class="sort">
-         <select class="selectpicker" onchange="location = this.value;">
-            <option value="{{ url_for('bills.view_bills', sort_type="default") }}">{{ "Default" }}</option>
-            <option value="{{ url_for('bills.view_bills', sort_type="bill_type") }}">{{ "Type" }}</option>
-            <option value="{{ url_for('bills.view_bills', sort_type="date_of_submission") }}">{{ "Submission Date" }}</option>
-        </select>
-    </label>
-    </div>
+    <label class="input-group-addon glyphicon glyphicon-sort" style="width: 50px;">
+            <select class="selectpicker glyphicon glyphicon-sort" onchange="location = this.value;">
+                <option>Sort</option>
+                <option value="{{ url_for('bills.view_bills', sort_type="default", filter_type=filter_type) }}">{{ "Default" }}</option>
+                <option value="{{ url_for('bills.view_bills', sort_type="bill_type", filter_type=filter_type) }}">{{ "Type" }}</option>
+                <option value="{{ url_for('bills.view_bills', sort_type="date_of_submission", filter_type=filter_type) }}">{{ "Submission Date" }}</option>
+            </select>
+        </label>
+        <label class="input-group-addon glyphicon glyphicon-filter" style="width: 50px;">
+            <select class="selectpicker" onchange="location = this.value;" aria-live="polite">
+                <option class="glyphicon glyphicon-filter">Filter</option>
+                <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="all") }}">{{ "All" }}</option>
+                <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="pending") }}">{{ "Pending" }}</option>
+                <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="accept") }}">{{ "Aceept" }}</option>
+                <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="reject") }}">{{ "Reject" }}</option>
+            </select>
+        </label>
     <table class="table table-hover">
         <thead>
         <tr>
