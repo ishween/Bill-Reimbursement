@@ -18,6 +18,10 @@
             {% for manager in managers_response %}
                 <option value="{{ url_for('admin.view_managers_admin', sort_type=sort_type, filter_type=manager) }}">{{ manager }}</option>
             {% endfor %}
+            <option disabled>Departments</option>
+            {% for dept in department_response %}
+                <option value="{{ url_for('admin.view_managers_admin', sort_type=sort_type, filter_type="department"+dept['_id']) }}">{{ dept['name'] }}</option>
+            {% endfor %}
         </select>
     </label>
 
