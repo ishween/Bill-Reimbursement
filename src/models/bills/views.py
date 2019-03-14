@@ -120,14 +120,19 @@ def edit_bill(bill_id):
     return render_template('employees/edit_bill.html', bill_types=bill_types)
 
 
-@bill_blueprint.route('/manager/viewBills', methods=['GET'])
-def view_bills_to_manager():
+@bill_blueprint.route('/manager/viewBills/<string:sort_type>/<string:filter_type>', methods=['GET'])
+def view_bills_to_manager(sort_type, filter_type):
     email = session['email']
     manager = Manager.get_by_manager_email(email)
-    bills = Bill.all_bills(manager['department_id'], "pending")
+    filter_bills = None
+    if filter_type == "pending" and filter_type is None:
+        filter_bills = Bill.all_bills(manager['department_id'], "pending")
+    else:
+        filter_bills = Bill.all_bills(manager['department_id'], filter_type)
     response = []
-    for bill in bills:
-        res = {}
+    for bill in filter_bills:
+        res={}
+        res['_id'] = bill['_id']
         res['bill_type'] = bill['bill_type']
         res['bill_image_url'] = bill['bill_image_url']
         res['date_of_submission'] = bill['date_of_submission']
@@ -139,7 +144,14 @@ def view_bills_to_manager():
         department = Department.get_by_id(bill['department_id'])
         res['department_name'] = department['name']
         response.append(res)
-    return render_template('managers/view_bills.html', response=response)
+
+    sorted_bills = None
+    if sort_type == "default":
+        sorted_bills = response
+    else:
+        sorted_bills = sorted(response, key=lambda k: k[sort_type])
+
+    return render_template('managers/view_bills.html', response=sorted_bills, sort_type=sort_type, filter_type=filter_type)
 
 
 @bill_blueprint.route('/manager/accept/<string:bill_id>', methods=['GET', 'POST'])
@@ -148,7 +160,6 @@ def accept_bill(bill_id):
     employee_id = bill.employee_id
     employee_email = Employee.get_by_employee_id(employee_id)
     # if request.method == 'POST':
-    print("yes")
     reimburse_amount = request.form['reimburse']
 
     send_email(employee_email.email, reimburse_amount, "accept")
@@ -157,7 +168,7 @@ def accept_bill(bill_id):
     bill.update_to_db()
     bill = Bill.get_by_id(bill_id)
     print(bill)
-    return redirect(url_for('.view_bills_to_manager'))
+    return redirect(url_for('.view_bills_to_manager', sort_type="default", filter_type="pending"))
 
 
 @bill_blueprint.route('/manager/reject/<string:bill_id>', methods=['GET'])
@@ -170,4 +181,4 @@ def reject_bill(bill_id):
     bill.status = "reject"
     bill.update_to_db()
 
-    return redirect(url_for('.view_bills_to_manager'))
+    return redirect(url_for('.view_bills_to_manager', sort_type="default", filter_type="pending"))
