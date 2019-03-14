@@ -19,7 +19,7 @@
             <div class="form-group">
                 <span class="input-group-addon">Select Department</span>
                 <label>
-                    <select name="department_id" class="selectpicker form-control">
+                    <select name="department_id" class="selectpicker form-control" data-width="100%">
                         {% for department in departments %}
                             <option value="{{ department._id }}">{{ department.name }}</option>
                         {% endfor %}

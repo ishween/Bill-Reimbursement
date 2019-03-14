@@ -49,5 +49,9 @@ class Bill(object):
     def all_bills_for_employee(cls, employee_id):
         return Database.find(billConstant.COLLECTION, {'employee_id': employee_id})
 
+    @classmethod
+    def all_bills_for_employee_filter(cls, employee_id, filter_type):
+        return Database.find(billConstant.COLLECTION, {'employee_id': employee_id, 'status': filter_type})
+
     def update_to_db(self):
         Database.update(billConstant.COLLECTION, {'_id': self._id}, self.json())

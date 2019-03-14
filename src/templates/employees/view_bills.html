@@ -1,36 +1,55 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Bills</h1>
-<table class="table table-hover">
-    <thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">Type</th>
-        <th scope="col">Bill url</th>
-        <th scope="col">Submission Date</th>
-        <th scope="col">Status</th>
-        <th scope="col">Edit</th>
-        <th scope="col">Delete</th>
-    </tr>
-    </thead>
-            <tbody>
-                {% for bill in bills %}
-                    <tr>
-                        <th scope="row">{{ loop.index }}</th>
-                        <td>{{ bill['bill_type'] }}</td>
-                        <td><a href="{{ bill['bill_image_url'] }}"><img src="{{ bill['bill_image_url'] }}" alt="Image" width="100" height="100"></a></td>
-                        <td>{{ bill['date_of_submission'] }}</td>
-                        <td>{{ bill['status'] }}</td>
-                        {% if bill['status'] == 'pending' %}
-                            <td><a class="btn btn-success" href="{{ url_for('bills.edit_bill', bill_id=bill['_id']) }}"> Edit Bill</a></td>
-                            <td><a class="btn btn-success" href="{{ url_for('bills.delete_bill', bill_id=bill['_id']) }}">Delete Bill</a> </td>
-                        {% else %}
-                            <td><button type="button" class="btn btn-success" disabled> Edit Bill </button></td>
-                            <td><button type="button" class="btn btn-success" disabled> Delete Bill </button></td>
-                        {% endif %}
-                    </tr>
-                 {% endfor %}
-            <tbody>
-        </table>
+
+
+        <h1>Bills</h1>
+    <label class="input-group-addon glyphicon glyphicon-sort" style="width: 50px;">
+            <select class="selectpicker glyphicon glyphicon-sort" onchange="location = this.value;">
+                <option>Sort</option>
+                <option value="{{ url_for('bills.view_bills', sort_type="default", filter_type=filter_type) }}">{{ "Default" }}</option>
+                <option value="{{ url_for('bills.view_bills', sort_type="bill_type", filter_type=filter_type) }}">{{ "Type" }}</option>
+                <option value="{{ url_for('bills.view_bills', sort_type="date_of_submission", filter_type=filter_type) }}">{{ "Submission Date" }}</option>
+            </select>
+        </label>
+        <label class="input-group-addon glyphicon glyphicon-filter" style="width: 50px;">
+            <select class="selectpicker" onchange="location = this.value;" aria-live="polite">
+                <option class="glyphicon glyphicon-filter">Filter</option>
+                <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="all") }}">{{ "All" }}</option>
+                <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="pending") }}">{{ "Pending" }}</option>
+                <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="accept") }}">{{ "Aceept" }}</option>
+                <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="reject") }}">{{ "Reject" }}</option>
+            </select>
+        </label>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Type</th>
+            <th scope="col">Bill url</th>
+            <th scope="col">Submission Date</th>
+            <th scope="col">Status</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for bill in bills %}
+            <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <td>{{ bill['bill_type'] }}</td>
+                <td><a href="{{ bill['bill_image_url'] }}"><img src="{{ bill['bill_image_url'] }}" alt="Image" width="100" height="100"></a></td>
+                <td>{{ bill['date_of_submission'] }}</td>
+                <td>{{ bill['status'] }}</td>
+                {% if bill['status'] == 'pending' %}
+                    <td><a class="btn btn-warning" href="{{ url_for('bills.edit_bill', bill_id=bill['_id']) }}"> Edit Bill</a></td>
+                    <td><a class="btn btn-danger" href="{{ url_for('bills.delete_bill', bill_id=bill['_id']) }}">Delete Bill</a> </td>
+                {% else %}
+                    <td><button type="button" class="btn btn-warning" disabled> Edit Bill </button></td>
+                    <td><button type="button" class="btn btn-danger" disabled> Delete Bill </button></td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        <tbody>
+    </table>
     <a class="btn btn-success" href="{{ url_for('bills.add_bill') }}"><span class="glyphicon glyphicon-plus"></span> Add Bill</a>
 {% endblock %}
