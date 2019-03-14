@@ -18,7 +18,7 @@ def login_employee():
         try:
             if Employee.is_login_valid(email, password):
                 session['email'] = email
-                return redirect(url_for('bills.view_bills'))
+                return redirect(url_for('bills.view_bills', sort_type="default"))
         except employeeErrors.EmployeeError as a:
             return a.message
 

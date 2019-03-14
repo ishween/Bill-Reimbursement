@@ -16,13 +16,29 @@ bill_blueprint = Blueprint('bills', __name__)
 #     Bill.all()
 
 
-@bill_blueprint.route('/viewBills', methods=['GET'])
-def view_bills():
+@bill_blueprint.route('/viewBills/<string:sort_type>', methods=['GET'])
+def view_bills(sort_type):
     email = session['email']
     employee = Employee.get_by_employee_email(email)
     bills = Bill.all_bills_for_employee(employee['_id'])
+    sorted_bills = None
+    if sort_type != "default":
+        sorted_bills = sorted(bills, key=lambda k: k[sort_type])
+    else:
+        sorted_bills = bills
     print(bills)
-    return render_template('employees/view_bills.html', bills=bills)
+    return render_template('employees/view_bills.html', bills=sorted_bills, sort_type=sort_type)
+
+#
+# @bill_blueprint.route('/viewBills/sorted/<string:sort_type>', methods=['GET'])
+# def view_bills_sorted(sort_type):
+#     print("yes")
+#     email = session['email']
+#     employee = Employee.get_by_employee_email(email)
+#     bills = Bill.all_bills_for_employee(employee['_id'])
+#     sorted_bills = sorted(bills, key=lambda k: k[sort_type])
+#     print(sorted_bills)
+#     return render_template('employees/view_bills.html', bills=sorted_bills, sort_type=sort_type)
 
 
 @bill_blueprint.route('/add', methods=['GET', 'POST'])
