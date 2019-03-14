@@ -4,7 +4,7 @@
     <h1>Admin Functions</h1>
     <center>
         <p><a href="{{ url_for('admin.view_departments_admin') }}">View Departments</a></p><br>
-        <p><a href="{{ url_for('admin.view_bill_types_admin') }}">View Bill Types</a></p><br>
+        <p><a href="{{ url_for('admin.view_bill_types_admin', sort_type="default", filter_type="default" ) }}">View Bill Types</a></p><br>
         <p><a href="{{ url_for('admin.view_managers_admin') }}">View Manager</a></p><br>
         <p><a href="{{ url_for('admin.view_employees_admin') }}">View Employee</a></p><br>
     </center>

@@ -77,8 +77,8 @@ def add_a_department():
     return render_template('department/add_department.html')
 
 
-@admin_blueprint.route('/viewBillTypes', methods=['GET'])
-def view_bill_types_admin():
+@admin_blueprint.route('/viewBillTypes/<string:sort_type>/<string:filter_type>', methods=['GET'])
+def view_bill_types_admin(sort_type, filter_type):
     company_id = Admin.get_by_email(session['email'])
     departments = view_departments(company_id)
     response = []
@@ -87,10 +87,14 @@ def view_bill_types_admin():
         res['department_id'] = department['_id']
         res['department_name'] = department['name']
         res['bills_type'] = []
-        bills_type = get_bills_type_by_department(department['_id'])
+        bills_type = get_bills_type_by_department(department['_id'], filter_type)
         for billtype in bills_type:
             res['bills_type'].append(billtype)
+        res = sorted(res, key=lambda k: k[sort_type])
         response.append(res)
+
+    response = sorted(response, key=lambda k: k['department_name']) #alphabetical order
+
     return render_template('bill_types/show_bills.html', response=response)
 
 
