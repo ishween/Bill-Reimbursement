@@ -15,3 +15,7 @@ def view_departments(company_id):
     print(company_id)
     departments = Department.get_all(company_id)
     return departments
+
+def get_department(department_id):
+    department = Department.get_by_id(department_id)
+    return department

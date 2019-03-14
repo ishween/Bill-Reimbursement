@@ -2,12 +2,22 @@
 {% block content %}
 
     <h1>Departments</h1>
-    <div class="list-group">
-        {% for department in departments %}
-            <h4 class="list-group-heading">
-                {{ department.name }}
-            </h4>
-        {% endfor %}
-    </div>
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Department</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for department in departments %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ department.name }}</td>
+                </tr>
+            {% endfor %}
+            <tbody>
+        </table>
     <a class="btn btn-success" href="{{ url_for('admin.add_a_department') }}"><span class="glyphicon glyphicon-plus"></span> Add Department</a>
 {% endblock %}

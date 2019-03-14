@@ -1,28 +1,50 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>Bill Types</h1>
+    <label class="input-group-addon glyphicon glyphicon-sort" style="width: 50px;">
+        <select class="selectpicker glyphicon glyphicon-sort" onchange="location = this.value;">
+            <option>Sort</option>
+            <option value="{{ url_for('admin.view_bill_types_admin', sort_type="default", filter_type=filter_type) }}">{{ "Default" }}</option>
+            <option value="{{ url_for('admin.view_bill_types_admin', sort_type="type", filter_type=filter_type) }}">{{ "Name" }}</option>
+        </select>
+    </label>
+    <label class="input-group-addon glyphicon glyphicon-filter" style="width: 50px;">
+        <select class="selectpicker" onchange="location = this.value;" aria-live="polite">
+            <option class="glyphicon glyphicon-filter">Filter</option>
+            <option value="{{ url_for('admin.view_bill_types_admin', sort_type=sort_type, filter_type="default") }}">{{ "All" }}</option>
+            <option disabled>Bill Types</option>
+            {% for type in types %}
+                <option value="{{ url_for('admin.view_bill_types_admin', sort_type=sort_type, filter_type=type) }}">{{ type }}</option>
+            {% endfor %}
+            <option disabled>Departments</option>
+            {% for dept in department_response %}
+                <option value="{{ url_for('admin.view_bill_types_admin', sort_type=sort_type, filter_type="department"+dept['_id']) }}">{{ dept['name'] }}</option>
+            {% endfor %}
+        </select>
+    </label>
+
     {% for department in response %}
         <h4>{{ department['department_name'] }}</h4>
         <table class="table table-hover">
             <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Reimbursement</th>
-                    <th scope="col">Edit</th>
-                    <th scope="col">Delete</th>
-                </tr>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Reimbursement</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
             </thead>
             <tbody>
-                {% for b in department['bills_type'] %}
-                    <tr>
-                        <th scope="row">{{ loop.index }}</th>
-                        <td>{{ b['type'] }}</td>
-                        <td>{{ b['reimbursement'] }}</td>
-                        <td><a class="btn btn-warning" href="{{ url_for('billType.edit_bill_type', billType_id=b['_id']) }}"> Edit Bill Type</a></td>
-                        <td><a class="btn btn-danger" href="{{ url_for('billType.delete_bill_type', billType_id=b['_id']) }}">Delete Bill Type</a> </td>
-                    </tr>
-                 {% endfor %}
+            {% for b in department['bills_type'] %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ b['type'] }}</td>
+                    <td>{{ b['reimbursement'] }}</td>
+                    <td><a class="btn btn-warning" href="{{ url_for('billType.edit_bill_type', billType_id=b['_id']) }}"> Edit Bill Type</a></td>
+                    <td><a class="btn btn-danger" href="{{ url_for('billType.delete_bill_type', billType_id=b['_id']) }}">Delete Bill Type</a> </td>
+                </tr>
+            {% endfor %}
             <tbody>
         </table>
     {% endfor %}
