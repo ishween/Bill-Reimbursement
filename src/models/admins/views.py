@@ -125,24 +125,38 @@ def add_a_bill_type():
     return render_template('bill_types/add_bill.html', departments=departments)
 
 
-@admin_blueprint.route('/viewManagers', methods=['GET'])
-def view_managers_admin():
+@admin_blueprint.route('/viewManagers/<string:sort_type>/<string:filter_type>', methods=['GET'])
+def view_managers_admin(sort_type, filter_type):
     company_id = Admin.get_by_email(session['email'])
     #managers = view_managers(company_id)
     departments = view_departments(company_id)
     response = []
+    managers_response = []
     for department in departments:
         res={}
         dept = department['_id']
         res['department_id'] = dept
         res['department_name'] = department['name']
         res['managers'] = []
-        print(dept)
+        append_managers = []
         managers = get_managers_by_department(dept)
+
         for manager in managers:
-            res['managers'].append(manager)
+            if filter_type != "default" and filter_type == manager['name']:
+                append_managers.append(manager)
+            elif filter_type == "default":
+                append_managers.append(manager)
+            if manager['name'] not in managers_response:
+                managers_response.append(manager['name'])
+
+        if sort_type != "default":
+            res['managers'] = sorted(append_managers, key=lambda k: k[sort_type])
+        else:
+            res['managers'] = append_managers
         response.append(res)
-    return render_template('managers/show_managers.html', response=response)
+
+    response = sorted(response, key=lambda k: k['department_name'])
+    return render_template('managers/show_managers.html', response=response, managers_response=managers_response, sort_type=sort_type, filter_type=filter_type)
 
 
 @admin_blueprint.route('/addManager', methods=['GET', 'POST'])

@@ -1,6 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>Managers</h1>
+    <label class="input-group-addon glyphicon glyphicon-sort" style="width: 50px;">
+        <select class="selectpicker show-ticks" onchange="location = this.value;">
+            <option>Sort</option>
+            <option value="{{ url_for('admin.view_managers_admin', sort_type="default", filter_type=filter_type) }}">{{ "Default: No Sort" }}</option>
+            <option value="{{ url_for('admin.view_managers_admin', sort_type="name", filter_type=filter_type) }}">{{ "Name" }}</option>
+            <option value="{{ url_for('admin.view_managers_admin', sort_type="designation", filter_type=filter_type) }}">{{ "Designation" }}</option>
+            <option value="{{ url_for('admin.view_managers_admin', sort_type="date_of_joining", filter_type=filter_type) }}">{{ "Joining Date" }}</option>
+        </select>
+    </label>
+    <label class="input-group-addon glyphicon glyphicon-filter" style="width: 50px;">
+        <select class="selectpicker" onchange="location = this.value;">
+            <option>Filter</option>
+            <option value="{{ url_for('admin.view_managers_admin', sort_type=sort_type, filter_type="default") }}">{{ "All" }}</option>
+            <option disabled>Name of Managers</option>
+            {% for manager in managers_response %}
+                <option value="{{ url_for('admin.view_managers_admin', sort_type=sort_type, filter_type=manager) }}">{{ manager }}</option>
+            {% endfor %}
+        </select>
+    </label>
+
     {% for department in response %}
         <h4>{{ department['department_name'] }}</h4>
         <table class="table table-hover">
