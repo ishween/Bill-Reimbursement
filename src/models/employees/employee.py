@@ -22,8 +22,8 @@ class Employee(object):
                                       self.monthly_salary)
 
     def is_login_valid(email, password):
-        employee_data = Database.find_one(employeeConstants.COLLECTION, {"email": email})
-        print(employee_data['password'])
+        employee_data = Database.find_one(employeeConstants.COLLECTION, {'email': email})
+        #print(employee_data['password'])
 
         if employee_data is None:
             raise EmployeeError.EmployeeNotExistError("You are not registered yet!")
@@ -42,6 +42,7 @@ class Employee(object):
 
     def json(self):
         return {
+            "_id": self._id,
             "company_id": self.company_id,
             "email": self.email,
             "password": self.password,
@@ -56,16 +57,25 @@ class Employee(object):
     def all(cls):
         return [cls(**elem) for elem in Database.find(employeeConstants.COLLECTION, {})]
 
-    def delete(self, _id):
+    def delete(self):
         Database.delete(employeeConstants.COLLECTION, {'_id': self._id})
 
     @classmethod
     def get_by_id(cls, company_id):
-        return Database.find(employeeConstants.COLLECTION,({"company_id":company_id}))
+        return Database.find(employeeConstants.COLLECTION,{"company_id":company_id})
 
     @classmethod
     def get_by_employee_id(cls, _id):
-        return Database.find_one(employeeConstants.COLLECTION,{'_id':_id})
+        return cls(**Database.find_one(employeeConstants.COLLECTION,{'_id':_id}))
 
     def update_to_db(self):
         Database.update(employeeConstants.COLLECTION, {'_id':self._id}, self.json())
+
+    @classmethod
+    def get_by_department_id(cls, department_id):
+        return Database.find(employeeConstants.COLLECTION, {'department_id': department_id})
+
+    @classmethod
+    def get_by_employee_email(cls, email):
+        employee = Database.find_one(employeeConstants.COLLECTION, {'email': email})
+        return employee

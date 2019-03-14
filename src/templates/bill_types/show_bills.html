@@ -19,8 +19,8 @@
                         <th scope="row">{{ loop.index }}</th>
                         <td>{{ b['type'] }}</td>
                         <td>{{ b['reimbursement'] }}</td>
-                        <td><a class="btn btn-success" href="{{ url_for('billType.edit_bill_type', billType_id=b['_id']) }}"> Edit Bill Type</a></td>
-                        <td><a class="btn btn-success" href="{{ url_for('billType.delete_bill_type', billType_id=b['_id']) }}">Delete Bill Type</a> </td>
+                        <td><a class="btn btn-warning" href="{{ url_for('billType.edit_bill_type', billType_id=b['_id']) }}"> Edit Bill Type</a></td>
+                        <td><a class="btn btn-danger" href="{{ url_for('billType.delete_bill_type', billType_id=b['_id']) }}">Delete Bill Type</a> </td>
                     </tr>
                  {% endfor %}
             <tbody>

@@ -18,13 +18,16 @@ def login_employee():
         try:
             if Employee.is_login_valid(email, password):
                 session['email'] = email
-                #return redirect(url_for('.user_alerts'))
-                print("login")
+                return redirect(url_for('bills.view_bills', sort_type="default", filter_type="all"))
         except employeeErrors.EmployeeError as a:
             return a.message
 
-    #return  render_template('users/login.html')
+    return render_template('employees/login_employee.html')
 
+
+@employee_blueprint.route('/employee', methods = ['GET'])
+def to_menu():
+    return render_template('employees/view_bills.html')
 
 # @employee_blueprint.route('/addEmployee', methods = ['GET', 'POST'])
 # def add_employee():
@@ -67,17 +70,22 @@ def edit_employee(employee_id):
         designation = request.form['designation']
         monthly_salary = request.form['monthly_salary']
 
-        employee['designation'] = designation
-        employee['monthly_salary'] = monthly_salary
+        print(type(designation))
+        print(type(monthly_salary))
+
+        if designation != "":
+            employee.designation = designation
+        if monthly_salary != "":
+            employee.monthly_salary = monthly_salary
 
         employee.update_to_db()
         return redirect(url_for('admin.view_employees_admin'))
     return render_template('employees/edit_employee.html')
 
 
-@employee_blueprint.route('/delete/<string:employee_id>', methods=['GET'])
+@employee_blueprint.route('/deleteEmployee/<string:employee_id>', methods=['GET'])
 def delete_employee(employee_id):
-    Employee.get_by_id(employee_id).delete()
+    Employee.get_by_employee_id(employee_id).delete()
     return redirect(url_for('admin.view_employees_admin'))
 
 
@@ -108,4 +116,9 @@ def edit_a_bill(bill_id):
 
 def get_employees(company_id):
     employees = Employee.get_by_id(company_id)
+    print(employees)
+    return employees
+
+def get_by_department_id(department_id):
+    employees = Employee.get_by_department_id(department_id)
     return employees
