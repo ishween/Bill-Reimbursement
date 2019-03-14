@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="form">
+    <form method="post" action="{{ url_for('bills.view_bills_sorted') }}">
+        <div class="form-group">
+                <span class="input-group-addon">Sort</span>
+                <label>
+                    <select name="sort" class="selectpicker form-control">
+                        <option>{{ "Default" }}</option>
+                        <option value="{{ bill_type }}">{{ "Type" }}</option>
+                        <option value="{{ date_of_submission }}">{{ "Submission Date" }}</option>
+                    </select>
+                </label>
+            </div>
+    </form>
+{% endblock %}
