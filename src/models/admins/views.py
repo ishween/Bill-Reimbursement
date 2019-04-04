@@ -61,7 +61,7 @@ def view_departments_admin():
     print("calling")
     company_id = Admin.get_by_email(session['email'])
     departments = view_departments(company_id)
-    return render_template('department/show_departments.html', departments=departments)
+    return render_template('admins/show_departments.html', departments=departments)
 
 
 @admin_blueprint.route('/admin', methods=['GET'])
@@ -78,7 +78,7 @@ def add_a_department():
         name = request.form['name']
 
         add_department(company_id, name)
-    return render_template('department/add_department.html')
+    return render_template('admins/add_department.html')
 
 
 @admin_blueprint.route('/viewBillTypes/<string:sort_type>/<string:filter_type>', methods=['GET'])
@@ -139,7 +139,7 @@ def view_bill_types_admin(sort_type, filter_type):
 
     response = sorted(response, key=lambda k: k['department_name']) #alphabetical order
 
-    return render_template('bill_types/show_bills.html', response=response, department_response=department_response, types=types, sort_type=sort_type, filter_type=filter_type)
+    return render_template('admins/show_bill_types.html', response=response, department_response=department_response, types=types, sort_type=sort_type, filter_type=filter_type)
 
 
 @admin_blueprint.route('/addBillType', methods=['GET', 'POST'])
@@ -154,7 +154,7 @@ def add_a_bill_type():
 
         add_bill_type(department_id, type, reimbursement)
 
-    return render_template('bill_types/add_bill.html', departments=departments)
+    return render_template('admins/add_bill_type.html', departments=departments)
 
 
 @admin_blueprint.route('/viewManagers/<string:sort_type>/<string:filter_type>', methods=['GET'])
@@ -212,7 +212,7 @@ def view_managers_admin(sort_type, filter_type):
             response.append(res)
 
     response = sorted(response, key=lambda k: k['department_name'])
-    return render_template('managers/show_managers.html', response=response, department_response=department_response, managers_response=managers_response, sort_type=sort_type, filter_type=filter_type)
+    return render_template('admins/show_managers.html', response=response, department_response=department_response, managers_response=managers_response, sort_type=sort_type, filter_type=filter_type)
 
 
 @admin_blueprint.route('/addManager', methods=['GET', 'POST'])
@@ -230,7 +230,7 @@ def add_a_manager():
 
         add_manager(company_id, email, name, designation, department_id, date_of_joining)
 
-    return render_template('managers/add_manager.html', departments=departments)
+    return render_template('admins/add_manager.html', departments=departments)
 
 
 @admin_blueprint.route('/viewEmployees/<string:sort_type>/<string:filter_type>', methods=['GET'])
@@ -283,7 +283,7 @@ def view_employees_admin(sort_type, filter_type):
             response.append(res)
 
     response = sorted(response, key=lambda k: k['department_name'])
-    return render_template('employees/show_employees.html', response=response, department_response=department_response, sort_type=sort_type, filter_type=filter_type)
+    return render_template('admins/show_employees.html', response=response, department_response=department_response, sort_type=sort_type, filter_type=filter_type)
 
 
 @admin_blueprint.route('/addEmployee', methods=['GET', 'POST'])
@@ -302,7 +302,7 @@ def add_employee():
 
         add_an_employee(company_id, email, name, designation, department_id, date_of_joining, monthly_salary)
 
-    return render_template('employees/add_employee.html', departments=departments)
+    return render_template('admins/add_employee.html', departments=departments)
 
 
 @admin_blueprint.route('/deleteEmployee/<string:employee_id>', methods=['GET'])

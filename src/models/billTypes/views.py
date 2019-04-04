@@ -43,14 +43,14 @@ def edit_bill_type(billType_id):
         billType.reimbursement = reimbursement
 
         billType.update_to_db()
-        return redirect(url_for('admin.view_bill_types_admin'))
-    return render_template('bill_types/edit_bill.html')
+        return redirect(url_for('admin.view_bill_types_admin', sort_type="default", filter_type="default"))
+    return render_template('admins/edit_bill_type.html')
 
 
 @billType_blueprint.route('/deleteBillType/<string:billType_id>', methods=['GET'])
 def delete_bill_type(billType_id):
     BillType.get_by_id(billType_id).delete()
-    return redirect(url_for('admin.view_bill_types_admin'))
+    return redirect(url_for('admin.view_bill_types_admin', sort_type="default", filter_type="default"))
 
 
 def get_bills_type_by_department(department_id):
