@@ -63,3 +63,7 @@ def get_bills_type_by_department(department_id):
         res['reimbursement'] = b.reimbursement
         response.append(res)
     return response
+
+
+def get_bill_amount_by_department_and_type(department_id, bill_type):
+    return BillType.get_amount(department_id, bill_type)['reimbursement']

@@ -3,6 +3,7 @@ from src.models.bills.bill import Bill
 from src.models.bills.constants import send_email
 from src.models.employees.employee import Employee
 from src.models.billTypes.billType import BillType
+from src.models.billTypes.views import get_bill_amount_by_department_and_type
 from src.models.managers.manager import Manager
 from src.models.department.department import Department
 import src.models.bills.error as BillErrors
@@ -108,6 +109,7 @@ def view_bills_to_manager(sort_type, filter_type):
         res={}
         res['_id'] = bill['_id']
         res['bill_type'] = bill['bill_type']
+        res['max_reimbursement_amount'] = get_bill_amount_by_department_and_type(manager['department_id'], bill['bill_type'])
         res['bill_image_url'] = bill['bill_image_url']
         res['date_of_submission'] = bill['date_of_submission']
         res['status'] = bill['status']
