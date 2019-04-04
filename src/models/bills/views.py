@@ -11,11 +11,6 @@ import src.decorators as bills_decorators
 
 bill_blueprint = Blueprint('bills', __name__)
 
-#
-# @bill_blueprint.route('/')
-# def index():
-#     Bill.all()
-
 
 @bill_blueprint.route('/viewBills/<string:sort_type>/<string:filter_type>', methods=['GET'])
 @bills_decorators.requires_login
@@ -32,7 +27,6 @@ def view_bills(sort_type, filter_type):
         sorted_bills = sorted(filter_bills, key=lambda k: k[sort_type])
     else:
         sorted_bills = filter_bills
-    # print(sorted_bills)
     return render_template('employees/view_bills.html', bills=sorted_bills, sort_type=sort_type, filter_type=filter_type)
 
 
@@ -102,8 +96,6 @@ def edit_bill(bill_id):
         if file_to_upload:
             upload_result = upload(file_to_upload)
             url = upload_result['url']
-            # thumbnail_url1, options = cloudinary_url(upload_result['public_id'], format="png", crop="fill", width=100,
-            #                                          height=100)
         if bill_type != "":
             bill.bill_type = bill_type
         if url is not None:
