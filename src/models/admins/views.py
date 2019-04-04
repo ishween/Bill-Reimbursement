@@ -6,6 +6,7 @@ from src.models.department.views import add_department, view_departments, get_de
 from src.models.billTypes.views import add_bill_type, delete_bill_type, get_bills_type_by_department
 from src.models.managers.views import add_manager, delete_manager, view_managers, get_managers_by_department
 from src.models.employees.views import add_an_employee, delete_employee, get_employees, get_by_department_id
+import src.models.admins.decorators as admin_decorators
 
 __author__ = 'ishween'
 
@@ -55,6 +56,7 @@ def logout_admin():
 
 
 @admin_blueprint.route('/viewDepartments', methods=['GET'])
+@admin_decorators.requires_login
 def view_departments_admin():
     print("calling")
     company_id = Admin.get_by_email(session['email'])
@@ -63,11 +65,13 @@ def view_departments_admin():
 
 
 @admin_blueprint.route('/admin', methods=['GET'])
+@admin_decorators.requires_login
 def to_menu():
     return render_template('admin_menue.html')
 
 
 @admin_blueprint.route('/addDepartment', methods=['GET', 'POST'])
+@admin_decorators.requires_login
 def add_a_department():
     if request.method == 'POST':
         company_id = Admin.get_by_email(session['email'])
@@ -78,6 +82,7 @@ def add_a_department():
 
 
 @admin_blueprint.route('/viewBillTypes/<string:sort_type>/<string:filter_type>', methods=['GET'])
+@admin_decorators.requires_login
 def view_bill_types_admin(sort_type, filter_type):
     company_id = Admin.get_by_email(session['email'])
     departments = view_departments(company_id)
@@ -138,6 +143,7 @@ def view_bill_types_admin(sort_type, filter_type):
 
 
 @admin_blueprint.route('/addBillType', methods=['GET', 'POST'])
+@admin_decorators.requires_login
 def add_a_bill_type():
     company_id = Admin.get_by_email(session['email'])
     departments = view_departments(company_id)
@@ -152,6 +158,7 @@ def add_a_bill_type():
 
 
 @admin_blueprint.route('/viewManagers/<string:sort_type>/<string:filter_type>', methods=['GET'])
+@admin_decorators.requires_login
 def view_managers_admin(sort_type, filter_type):
     company_id = Admin.get_by_email(session['email'])
     #managers = view_managers(company_id)
@@ -209,6 +216,7 @@ def view_managers_admin(sort_type, filter_type):
 
 
 @admin_blueprint.route('/addManager', methods=['GET', 'POST'])
+@admin_decorators.requires_login
 def add_a_manager():
     company_id = Admin.get_by_email(session['email'])
     departments = view_departments(company_id)
@@ -226,6 +234,7 @@ def add_a_manager():
 
 
 @admin_blueprint.route('/viewEmployees/<string:sort_type>/<string:filter_type>', methods=['GET'])
+@admin_decorators.requires_login
 def view_employees_admin(sort_type, filter_type):
     company_id = Admin.get_by_email(session['email'])
     departments = view_departments(company_id)
@@ -278,6 +287,7 @@ def view_employees_admin(sort_type, filter_type):
 
 
 @admin_blueprint.route('/addEmployee', methods=['GET', 'POST'])
+@admin_decorators.requires_login
 def add_employee():
     company_id = Admin.get_by_email(session['email'])
     departments = view_departments(company_id)
@@ -296,16 +306,19 @@ def add_employee():
 
 
 @admin_blueprint.route('/deleteEmployee/<string:employee_id>', methods=['GET'])
+@admin_decorators.requires_login
 def delete_employee(employee_id):
     delete_employee(employee_id)
 
 
 @admin_blueprint.route('/deleteBillType/<string:bill_type_id>', methods=['GET'])
+@admin_decorators.requires_login
 def delete_bill_type(bill_type_id):
     delete_bill_type(bill_type_id)
 
 
 @admin_blueprint.route('/deleteManager/<string:manager_id>', methods=['GET'])
+@admin_decorators.requires_login
 def delete_manager(manager_id):
     delete_manager(manager_id)
 
