@@ -43,13 +43,6 @@ def logout_admin():
 def delete_employee(employee_id):
     Employee.get_by_employee_id(employee_id).delete()
 
-
-# @employee_blueprint.route('/showEmployee')
-# def showEmployee():
-#     Employee.all()
-#
-
-
 def edit_employee(designation, monthly_salary, employee_id):
     employee = Employee.get_by_employee_id(employee_id)
 
