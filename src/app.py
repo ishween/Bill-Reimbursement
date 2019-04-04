@@ -5,6 +5,7 @@ app = Flask(__name__)
 app.secret_key = 'ishween'
 app.config.from_object('config')
 
+
 @app.before_first_request
 def db_initialize():
     print("created")

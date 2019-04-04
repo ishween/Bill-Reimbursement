@@ -6,7 +6,7 @@ from src.models.department.views import add_department, view_departments, get_de
 from src.models.billTypes.views import add_bill_type, delete_bill_type, get_bills_type_by_department
 from src.models.managers.views import add_manager, delete_manager, view_managers, get_managers_by_department
 from src.models.employees.views import add_an_employee, delete_employee, get_employees, get_by_department_id
-import src.models.admins.decorators as admin_decorators
+import src.decorators as admin_decorators
 
 __author__ = 'ishween'
 
