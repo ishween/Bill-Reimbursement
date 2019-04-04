@@ -5,7 +5,7 @@ from src.models.admins.admin import Admin
 from src.models.department.views import add_department, view_departments, get_department
 from src.models.billTypes.views import add_bill_type, delete_bill_type, get_bills_type_by_department
 from src.models.managers.views import add_manager, delete_manager, view_managers, get_managers_by_department
-from src.models.employees.views import add_an_employee, delete_employee, get_employees, get_by_department_id
+from src.models.employees.views import add_an_employee, delete_employee, get_employees, get_by_department_id, edit_employee
 import src.decorators as admin_decorators
 
 __author__ = 'ishween'
@@ -305,10 +305,26 @@ def add_employee():
     return render_template('admins/add_employee.html', departments=departments)
 
 
+@admin_blueprint.route('/edit/<string:employee_id>', methods=['GET', 'POST'])
+@admin_decorators.requires_login
+def admin_edit_employee(employee_id):
+    if request.method == 'POST':
+        designation = request.form['designation']
+        monthly_salary = request.form['monthly_salary']
+
+        print(type(designation))
+        print(type(monthly_salary))
+
+        edit_employee(designation, monthly_salary, employee_id)
+        return redirect(url_for('admin.view_employees_admin', sort_type="default", filter_type="default"))
+    return render_template('admins/edit_employee.html')
+
+
 @admin_blueprint.route('/deleteEmployee/<string:employee_id>', methods=['GET'])
 @admin_decorators.requires_login
-def delete_employee(employee_id):
+def admin_delete_employee(employee_id):
     delete_employee(employee_id)
+    return redirect(url_for('admin.view_employees_admin', sort_type="default", filter_type="default"))
 
 
 @admin_blueprint.route('/deleteBillType/<string:bill_type_id>', methods=['GET'])
