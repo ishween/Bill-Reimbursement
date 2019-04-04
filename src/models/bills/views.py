@@ -7,6 +7,7 @@ from src.models.managers.manager import Manager
 from src.models.department.department import Department
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
+import src.decorators as bills_decorators
 
 bill_blueprint = Blueprint('bills', __name__)
 
@@ -17,6 +18,7 @@ bill_blueprint = Blueprint('bills', __name__)
 
 
 @bill_blueprint.route('/viewBills/<string:sort_type>/<string:filter_type>', methods=['GET'])
+@bills_decorators.requires_login
 def view_bills(sort_type, filter_type):
     email = session['email']
     employee = Employee.get_by_employee_email(email)
@@ -46,6 +48,7 @@ def view_bills(sort_type, filter_type):
 
 
 @bill_blueprint.route('/add', methods=['GET', 'POST'])
+@bills_decorators.requires_login
 def add_bill():
     employee_email = session['email']
     employee = Employee.get_by_employee_email(employee_email)
@@ -74,6 +77,7 @@ def add_bill():
 
 
 @bill_blueprint.route('/delete/<string:bill_id>', methods=['GET'])
+@bills_decorators.requires_login
 def delete_bill(bill_id):
     Bill.delete(bill_id)
     return redirect(url_for('.view_bills'))
@@ -94,6 +98,7 @@ def change_status(bill_id, status):
 
 
 @bill_blueprint.route('/editBill/<string:bill_id>', methods=['GET', 'POST'])
+@bills_decorators.requires_login
 def edit_bill(bill_id):
     bill = Bill.get_by_id(bill_id)
     employee_email = session['email']
@@ -121,6 +126,7 @@ def edit_bill(bill_id):
 
 
 @bill_blueprint.route('/manager/viewBills/<string:sort_type>/<string:filter_type>', methods=['GET'])
+@bills_decorators.requires_login
 def view_bills_to_manager(sort_type, filter_type):
     email = session['email']
     manager = Manager.get_by_manager_email(email)
@@ -155,6 +161,7 @@ def view_bills_to_manager(sort_type, filter_type):
 
 
 @bill_blueprint.route('/manager/accept/<string:bill_id>', methods=['GET', 'POST'])
+@bills_decorators.requires_login
 def accept_bill(bill_id):
     bill = Bill.get_by_id(bill_id)
     employee_id = bill.employee_id
@@ -172,6 +179,7 @@ def accept_bill(bill_id):
 
 
 @bill_blueprint.route('/manager/reject/<string:bill_id>', methods=['GET'])
+@bills_decorators.requires_login
 def reject_bill(bill_id):
     bill = Bill.get_by_id(bill_id)
     employee_id = bill.employee_id
