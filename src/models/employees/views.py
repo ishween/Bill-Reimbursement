@@ -80,14 +80,14 @@ def edit_employee(employee_id):
             employee.monthly_salary = monthly_salary
 
         employee.update_to_db()
-        return redirect(url_for('admin.view_employees_admin'))
-    return render_template('employees/edit_employee.html')
+        return redirect(url_for('admin.view_employees_admin', sort_type="default", filter_type="default"))
+    return render_template('admins/edit_employee.html')
 
 
 @employee_blueprint.route('/deleteEmployee/<string:employee_id>', methods=['GET'])
 def delete_employee(employee_id):
     Employee.get_by_employee_id(employee_id).delete()
-    return redirect(url_for('admin.view_employees_admin'))
+    return redirect(url_for('admin.view_employees_admin', sort_type="default", filter_type="default"))
 
 
 @employee_blueprint.route('/addBill', methods = ['GET' , 'POST'])

@@ -62,14 +62,14 @@ def edit_manager(manager_id):
         manager.designation = designation
 
         manager.update_to_db()
-        return redirect(url_for('admin.view_managers_admin'))
-    return render_template('managers/edit_manager.html')
+        return redirect(url_for('admin.view_managers_admin', sort_type="default", filter_type="default"))
+    return render_template('admins/edit_manager.html')
 
 
 @manager_blueprint.route('/deleteManager/<string:manager_id>', methods = ['GET'])
 def delete_manager(manager_id):
     Manager.get_by_manager_id(manager_id).delete()
-    return redirect(url_for('admin.view_managers_admin'))
+    return redirect(url_for('admin.view_managers_admin', sort_type="default", filter_type="default"))
 
 @manager_blueprint.route('/manager/logout')
 def logout_admin():
