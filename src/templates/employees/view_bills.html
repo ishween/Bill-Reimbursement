@@ -16,7 +16,7 @@
                 <option class="glyphicon glyphicon-filter">Filter</option>
                 <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="all") }}">{{ "All" }}</option>
                 <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="pending") }}">{{ "Pending" }}</option>
-                <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="accept") }}">{{ "Aceept" }}</option>
+                <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="accept") }}">{{ "Accept" }}</option>
                 <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="reject") }}">{{ "Reject" }}</option>
             </select>
         </label>
