@@ -7,16 +7,13 @@ from src.models.managers.manager import Manager
 from src.models.department.department import Department
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
+import src.decorators as bills_decorators
 
 bill_blueprint = Blueprint('bills', __name__)
 
-#
-# @bill_blueprint.route('/')
-# def index():
-#     Bill.all()
-
 
 @bill_blueprint.route('/viewBills/<string:sort_type>/<string:filter_type>', methods=['GET'])
+@bills_decorators.requires_login
 def view_bills(sort_type, filter_type):
     email = session['email']
     employee = Employee.get_by_employee_email(email)
@@ -30,22 +27,11 @@ def view_bills(sort_type, filter_type):
         sorted_bills = sorted(filter_bills, key=lambda k: k[sort_type])
     else:
         sorted_bills = filter_bills
-    # print(sorted_bills)
     return render_template('employees/view_bills.html', bills=sorted_bills, sort_type=sort_type, filter_type=filter_type)
-
-#
-# @bill_blueprint.route('/viewBills/sorted/<string:sort_type>', methods=['GET'])
-# def view_bills_sorted(sort_type):
-#     print("yes")
-#     email = session['email']
-#     employee = Employee.get_by_employee_email(email)
-#     bills = Bill.all_bills_for_employee(employee['_id'])
-#     sorted_bills = sorted(bills, key=lambda k: k[sort_type])
-#     print(sorted_bills)
-#     return render_template('employees/view_bills.html', bills=sorted_bills, sort_type=sort_type)
 
 
 @bill_blueprint.route('/add', methods=['GET', 'POST'])
+@bills_decorators.requires_login
 def add_bill():
     employee_email = session['email']
     employee = Employee.get_by_employee_email(employee_email)
@@ -74,9 +60,10 @@ def add_bill():
 
 
 @bill_blueprint.route('/delete/<string:bill_id>', methods=['GET'])
+@bills_decorators.requires_login
 def delete_bill(bill_id):
     Bill.delete(bill_id)
-    return redirect(url_for('.view_bills'))
+    return redirect(url_for('.view_bills', sort_type="default", filter_type="all"))
 
 
 #@bill_blueprint.route('/edit/<string:bill_id>', methods=['GET', 'POST'])
@@ -94,6 +81,7 @@ def change_status(bill_id, status):
 
 
 @bill_blueprint.route('/editBill/<string:bill_id>', methods=['GET', 'POST'])
+@bills_decorators.requires_login
 def edit_bill(bill_id):
     bill = Bill.get_by_id(bill_id)
     employee_email = session['email']
@@ -108,8 +96,6 @@ def edit_bill(bill_id):
         if file_to_upload:
             upload_result = upload(file_to_upload)
             url = upload_result['url']
-            # thumbnail_url1, options = cloudinary_url(upload_result['public_id'], format="png", crop="fill", width=100,
-            #                                          height=100)
         if bill_type != "":
             bill.bill_type = bill_type
         if url is not None:
@@ -121,6 +107,7 @@ def edit_bill(bill_id):
 
 
 @bill_blueprint.route('/manager/viewBills/<string:sort_type>/<string:filter_type>', methods=['GET'])
+@bills_decorators.requires_login
 def view_bills_to_manager(sort_type, filter_type):
     email = session['email']
     manager = Manager.get_by_manager_email(email)
@@ -155,6 +142,7 @@ def view_bills_to_manager(sort_type, filter_type):
 
 
 @bill_blueprint.route('/manager/accept/<string:bill_id>', methods=['GET', 'POST'])
+@bills_decorators.requires_login
 def accept_bill(bill_id):
     bill = Bill.get_by_id(bill_id)
     employee_id = bill.employee_id
@@ -172,6 +160,7 @@ def accept_bill(bill_id):
 
 
 @bill_blueprint.route('/manager/reject/<string:bill_id>', methods=['GET'])
+@bills_decorators.requires_login
 def reject_bill(bill_id):
     bill = Bill.get_by_id(bill_id)
     employee_id = bill.employee_id

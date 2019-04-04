@@ -23,7 +23,6 @@ class Employee(object):
 
     def is_login_valid(email, password):
         employee_data = Database.find_one(employeeConstants.COLLECTION, {'email': email})
-        #print(employee_data['password'])
 
         if employee_data is None:
             raise EmployeeError.EmployeeNotExistError("You are not registered yet!")

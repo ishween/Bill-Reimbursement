@@ -1,10 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %}
 
-</body>
-</html>
+    <h1> Add Manager </h1>
+    <div class="form">
+        <form method="post">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="xyz@mail.com">
+            </div>
+            <div class="form-group">
+                <label for="Name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+            </div>
+            <div class="form-group">
+                <label for="designation">Designation</label>
+                <input type="text" class="form-control" id="designation" name="designation" placeholder="Designation">
+            </div>
+            {#            <div class="dropdown">#}
+            {#            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+            {#                Department#}
+            {#            </button>#}
+            {#                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">#}
+            {#                    {% for department in departments %}#}
+            {#                        <a class="dropdown-item" {{ department._id }}>{{ department.name }}</a>#}
+            {#                </div>#}
+            {#            </div>#}
+            <div class="form-group">
+                <span class="input-group-addon">Please select</span>
+                <label>
+                    <select name="department_id" class="selectpicker form-control" data-width="100%">
+                        {% for department in departments %}
+                            <option value="{{ department._id }}">{{ department.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="date_of_joining">Date Of Joining</label>
+                <input type="date" class="form-control" id="date_of_joining" name="date_of_joining" placeholder="date_of_joining">
+            </div>
+            <center><button type="submit" class="btn btn-success">Add Manager</button></center>
+        </form>
+    </div>
+{% endblock %}
