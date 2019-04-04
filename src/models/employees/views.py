@@ -3,6 +3,7 @@ from werkzeug.utils import redirect
 import src.models.employees.error as employeeErrors
 from src.models.employees.employee import Employee
 from src.models.bills.views import add_bill, delete_bill, edit_bill
+import src.decorators as employee_decorators
 
 __author__ = 'ishween'
 
@@ -90,6 +91,7 @@ def delete_employee(employee_id):
 
 
 @employee_blueprint.route('/addBill', methods = ['GET' , 'POST'])
+@employee_decorators.requires_login
 def add_bill():
     if request.method == 'POST':
         employee_id = request.form['employee_id']
@@ -102,11 +104,13 @@ def add_bill():
 
 
 @employee_blueprint.route('/delete_bill/<string:bill_id>', methods = ['GET'])
+@employee_decorators.requires_login
 def delete_a_bill(bill_id):
     delete_bill(bill_id)
 
 
 @employee_blueprint.route('/edit_bill/<string:bill_id>', methods = ['POST'])
+@employee_decorators.requires_login
 def edit_a_bill(bill_id):
     bill_type = request.form['bill_type']
     bill_image = request.form['bill_image']

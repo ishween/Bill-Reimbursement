@@ -3,6 +3,7 @@ from werkzeug.utils import redirect
 import src.models.managers.error as managerErrors
 from src.models.managers.manager import Manager
 from src.models.bills.views import change_status
+import src.decorators as manager_decorators
 
 __author__ = 'ishween'
 
@@ -77,6 +78,7 @@ def logout_admin():
     #return redirect(url_for('home'))
 
 @manager_blueprint.route('/status/<string:bill_id>/<string:status>', methods = ['POST'])
+@manager_decorators.requires_login
 def change_status(bill_id, status):
     change_status(bill_id, status)
 
