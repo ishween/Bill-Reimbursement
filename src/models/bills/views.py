@@ -66,20 +66,6 @@ def delete_bill(bill_id):
     return redirect(url_for('.view_bills', sort_type="default", filter_type="all"))
 
 
-#@bill_blueprint.route('/edit/<string:bill_id>', methods=['GET', 'POST'])
-def change_status(bill_id, status):
-    bill = Bill.get_by_id(bill_id)
-
-    bill.status = status
-
-    bill.save_to_db()
-    email = Employee.get_by_id(bill.employee_id)
-    send_email(email, status)
-    #return redirect(url_for('.index'))
-
-    #return render_template('stores/edit_store.html', store=store)
-
-
 @bill_blueprint.route('/editBill/<string:bill_id>', methods=['GET', 'POST'])
 @bills_decorators.requires_login
 def edit_bill(bill_id):
@@ -147,7 +133,6 @@ def accept_bill(bill_id):
     bill = Bill.get_by_id(bill_id)
     employee_id = bill.employee_id
     employee_email = Employee.get_by_employee_id(employee_id)
-    # if request.method == 'POST':
     reimburse_amount = request.form['reimburse']
 
     send_email(employee_email.email, reimburse_amount, "accept")
