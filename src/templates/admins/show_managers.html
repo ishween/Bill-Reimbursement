@@ -47,8 +47,8 @@
                     <td>{{ manager['email'] }}</td>
                     <td>{{ manager['designation'] }}</td>
                     <td>{{ manager['date_of_joining'] }}</td>
-                    <td><a class="btn btn-warning" href="{{ url_for('manager.edit_manager', manager_id=manager['_id']) }}"> Edit Manager</a></td>
-                    <td><a class="btn btn-danger" href="{{ url_for('manager.delete_manager', manager_id=manager['_id']) }}">Delete Manager</a> </td>
+                    <td><a class="btn btn-warning" href="{{ url_for('admin.admin_edit_manager', manager_id=manager['_id']) }}"> Edit Manager</a></td>
+                    <td><a class="btn btn-danger" href="{{ url_for('admin.admin_delete_manager', manager_id=manager['_id']) }}">Delete Manager</a> </td>
                 </tr>
             {% endfor %}
             <tbody>

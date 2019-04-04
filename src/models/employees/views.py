@@ -10,7 +10,7 @@ __author__ = 'ishween'
 employee_blueprint = Blueprint('employees', __name__)
 
 
-@employee_blueprint.route('/employee/login', methods = ['GET','POST'])
+@employee_blueprint.route('/employee/login', methods=['GET', 'POST'])
 def login_employee():
     if request.method == 'POST':
         email = request.form['email']
@@ -26,36 +26,25 @@ def login_employee():
     return render_template('employees/login_employee.html')
 
 
-@employee_blueprint.route('/employee', methods = ['GET'])
+@employee_blueprint.route('/employee', methods=['GET'])
 def to_menu():
     return render_template('employees/view_bills.html')
 
-# @employee_blueprint.route('/addEmployee', methods = ['GET', 'POST'])
-# def add_employee():
-#     if request.method == 'POST':
-#         manager_id = request.form['manager_id']
-#         email = request.form['email']
-#         name = request.form['name']
-#         designation = request.form['designation']
-#         department_id = request.form['department_id']
-#         date_of_joining = request.form['date_of_joining']
-#         monthly_salary = request.form['monthly_salary']
-#
-#         Employee.add_an_employee(manager_id, email, name, designation, department_id, date_of_joining, monthly_salary)
-#     return render_template('users/login.html')
 
 def add_an_employee(company_id, email, name, designation, department_id, date_of_joining, monthly_salary):
     Employee.add_an_employee(company_id, email, name, designation, department_id, date_of_joining, monthly_salary)
+
 
 @employee_blueprint.route('/employee/logout')
 def logout_admin():
     session['email'] = None
     print("logout")
-    #return redirect(url_for('home'))
+    # return redirect(url_for('home'))
 
 
 def delete_employee(employee_id):
-    Employee.get_by_id(employee_id).delete()
+    Employee.get_by_employee_id(employee_id).delete()
+
 
 # @employee_blueprint.route('/showEmployee')
 # def showEmployee():
@@ -63,34 +52,18 @@ def delete_employee(employee_id):
 #
 
 
-@employee_blueprint.route('/edit/<string:employee_id>', methods=['GET', 'POST'])
-def edit_employee(employee_id):
+def edit_employee(designation, monthly_salary, employee_id):
     employee = Employee.get_by_employee_id(employee_id)
-    print(employee)
-    if request.method == 'POST':
-        designation = request.form['designation']
-        monthly_salary = request.form['monthly_salary']
 
-        print(type(designation))
-        print(type(monthly_salary))
-
-        if designation != "":
-            employee.designation = designation
-        if monthly_salary != "":
-            employee.monthly_salary = monthly_salary
+    if designation != "":
+        employee.designation = designation
+    if monthly_salary != "":
+        employee.monthly_salary = monthly_salary
 
         employee.update_to_db()
-        return redirect(url_for('admin.view_employees_admin', sort_type="default", filter_type="default"))
-    return render_template('admins/edit_employee.html')
 
 
-@employee_blueprint.route('/deleteEmployee/<string:employee_id>', methods=['GET'])
-def delete_employee(employee_id):
-    Employee.get_by_employee_id(employee_id).delete()
-    return redirect(url_for('admin.view_employees_admin', sort_type="default", filter_type="default"))
-
-
-@employee_blueprint.route('/addBill', methods = ['GET' , 'POST'])
+@employee_blueprint.route('/addBill', methods=['GET', 'POST'])
 @employee_decorators.requires_login
 def add_bill():
     if request.method == 'POST':
@@ -103,13 +76,13 @@ def add_bill():
         add_bill(employee_id, bill_type, department_id, date_of_submission, bill_image)
 
 
-@employee_blueprint.route('/delete_bill/<string:bill_id>', methods = ['GET'])
+@employee_blueprint.route('/delete_bill/<string:bill_id>', methods=['GET'])
 @employee_decorators.requires_login
 def delete_a_bill(bill_id):
     delete_bill(bill_id)
 
 
-@employee_blueprint.route('/edit_bill/<string:bill_id>', methods = ['POST'])
+@employee_blueprint.route('/edit_bill/<string:bill_id>', methods=['POST'])
 @employee_decorators.requires_login
 def edit_a_bill(bill_id):
     bill_type = request.form['bill_type']
@@ -122,6 +95,7 @@ def get_employees(company_id):
     employees = Employee.get_by_id(company_id)
     print(employees)
     return employees
+
 
 def get_by_department_id(department_id):
     employees = Employee.get_by_department_id(department_id)
