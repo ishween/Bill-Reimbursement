@@ -80,7 +80,7 @@ def add_bill():
 @bills_decorators.requires_login
 def delete_bill(bill_id):
     Bill.delete(bill_id)
-    return redirect(url_for('.view_bills'))
+    return redirect(url_for('.view_bills', sort_type="default", filter_type="all"))
 
 
 #@bill_blueprint.route('/edit/<string:bill_id>', methods=['GET', 'POST'])

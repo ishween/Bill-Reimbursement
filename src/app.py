@@ -26,6 +26,6 @@ app.register_blueprint(admin_blueprint, url_prefix='/admin')
 app.register_blueprint(employee_blueprint)
 app.register_blueprint(manager_blueprint)
 app.register_blueprint(billType_blueprint, url_prefix='/billType')
-app.register_blueprint(bill_blueprint, url_prefix='/bill')
+app.register_blueprint(bill_blueprint, url_prefix='/employee/bill')
 
 # newlist = sorted(list_to_be_sorted, key=lambda k: k['name'])
