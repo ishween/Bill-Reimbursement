@@ -4,7 +4,7 @@ import src.models.admins.errors as adminErrors
 from src.models.admins.admin import Admin
 from src.models.department.views import add_department, view_departments, get_department
 from src.models.billTypes.views import add_bill_type, delete_bill_type, get_bills_type_by_department
-from src.models.managers.views import add_manager, delete_manager, view_managers, get_managers_by_department
+from src.models.managers.views import add_manager, delete_manager, view_managers, get_managers_by_department, edit_manager
 from src.models.employees.views import add_an_employee, delete_employee, get_employees, get_by_department_id, edit_employee
 import src.decorators as admin_decorators
 
@@ -233,6 +233,17 @@ def add_a_manager():
     return render_template('admins/add_manager.html', departments=departments)
 
 
+@admin_blueprint.route('/editManager/<string:manager_id>', methods = ['GET', 'POST'])
+@admin_decorators.requires_login
+def admin_edit_manager(manager_id):
+    if request.method == 'POST':
+        designation = request.form['designation']
+
+        edit_manager(designation, manager_id)
+        return redirect(url_for('admin.view_managers_admin', sort_type="default", filter_type="default"))
+    return render_template('admins/edit_manager.html')
+
+
 @admin_blueprint.route('/viewEmployees/<string:sort_type>/<string:filter_type>', methods=['GET'])
 @admin_decorators.requires_login
 def view_employees_admin(sort_type, filter_type):
@@ -335,6 +346,6 @@ def delete_bill_type(bill_type_id):
 
 @admin_blueprint.route('/deleteManager/<string:manager_id>', methods=['GET'])
 @admin_decorators.requires_login
-def delete_manager(manager_id):
+def admin_delete_manager(manager_id):
     delete_manager(manager_id)
-
+    return redirect(url_for('admin.view_managers_admin', sort_type="default", filter_type="default"))
