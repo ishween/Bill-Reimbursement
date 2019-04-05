@@ -19,7 +19,7 @@ def login_manager():
         try:
             if Manager.is_login_valid(email, password):
                 session['email'] = email
-                return redirect(url_for('bills.view_bills_to_manager', sort_type="default", filter_type="pending"))
+                return redirect(url_for('manager.to_menu', sort_type="default", filter_type="pending"))
         except managerErrors.ManagerError as a:
             return a.message
 
@@ -73,7 +73,7 @@ def reset_password():
             employee = Manager.is_reset_password_valid(email, old_password)
             employee.password = Utils.hash_password(new_password)
             employee.update_to_db()
-            return redirect(url_for('bills.view_bills_to_manager', sort_type="default", filter_type="pending"))
+            return redirect(url_for('manager.to_menu', sort_type="default", filter_type="pending"))
         except managerErrors.IncorrectPasswordError as error:
             return error.message
 
