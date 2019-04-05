@@ -1,6 +1,7 @@
 import uuid
 from src.db.database import Database
 import src.models.bills.constants as billConstant
+import src.models.bills.error as billError
 
 
 class Bill(object):
@@ -55,3 +56,9 @@ class Bill(object):
 
     def update_to_db(self):
         Database.update(billConstant.COLLECTION, {'_id': self._id}, self.json())
+
+    def isReimbursementAdded(reimbursement_amount):
+        if reimbursement_amount == "":
+            raise billError.ReimbursementAmountNotAdded("Add Reimbursement Amount")
+        else:
+            return True
