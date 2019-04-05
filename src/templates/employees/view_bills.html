@@ -2,7 +2,10 @@
 {% block content %}
 
 
-        <h1>Bills</h1>
+    <div class="reset">
+        <a class="btn btn-warning" href="{{ url_for('employees.reset_password') }}">Reset Password</a>
+    </div>
+    <h1>Bills</h1>
     <label class="input-group-addon glyphicon glyphicon-sort" style="width: 50px;">
             <select class="selectpicker glyphicon glyphicon-sort" onchange="location = this.value;">
                 <option>Sort</option>
