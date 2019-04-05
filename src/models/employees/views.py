@@ -2,6 +2,7 @@ from flask import Blueprint, request, session, url_for, render_template
 from werkzeug.utils import redirect
 import src.models.employees.error as employeeErrors
 from src.models.employees.employee import Employee
+from src.db.utils import Utils
 
 __author__ = 'ishween'
 
@@ -73,7 +74,7 @@ def reset_password():
         new_password = request.form['new_password']
         try:
             employee = Employee.is_reset_password_valid(email, old_password)
-            employee['password'] = new_password
+            employee.password = Utils.hash_password(new_password)
             employee.update_to_db()
             return redirect(url_for('bills.view_bills', sort_type="default", filter_type="all"))
         except employeeErrors.IncorrectPasswordError as error:
