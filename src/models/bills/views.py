@@ -3,8 +3,10 @@ from src.models.bills.bill import Bill
 from src.models.bills.constants import send_email
 from src.models.employees.employee import Employee
 from src.models.billTypes.billType import BillType
+from src.models.billTypes.views import get_bill_amount_by_department_and_type
 from src.models.managers.manager import Manager
 from src.models.department.department import Department
+import src.models.bills.error as BillErrors
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 import src.decorators as bills_decorators
@@ -107,6 +109,7 @@ def view_bills_to_manager(sort_type, filter_type):
         res={}
         res['_id'] = bill['_id']
         res['bill_type'] = bill['bill_type']
+        res['max_reimbursement_amount'] = get_bill_amount_by_department_and_type(manager['department_id'], bill['bill_type'])
         res['bill_image_url'] = bill['bill_image_url']
         res['date_of_submission'] = bill['date_of_submission']
         res['status'] = bill['status']
@@ -135,12 +138,15 @@ def accept_bill(bill_id):
     employee_email = Employee.get_by_employee_id(employee_id)
     reimburse_amount = request.form['reimburse']
 
-    send_email(employee_email.email, reimburse_amount, "accept")
+    try:
+        Bill.isReimbursementAdded(reimburse_amount)
+        send_email(employee_email.email, reimburse_amount, "accept")
+        bill.status = "accept"
+        bill.update_to_db()
+        bill = Bill.get_by_id(bill_id)
+    except BillErrors.ReimbursementAmountNotAdded as error:
+        return error.message
 
-    bill.status = "accept"
-    bill.update_to_db()
-    bill = Bill.get_by_id(bill_id)
-    print(bill)
     return redirect(url_for('.view_bills_to_manager', sort_type="default", filter_type="pending"))
 
 
