@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+
+{#    <div class="reset">#}
+{#        <a class="btn btn-warning" href="{{ url_for('admin.reset_password') }}">Reset Password</a>#}
+{#    </div>#}
+    <h1 class="header">Admin Functions <a class="btn btn-warning reset" href="{{ url_for('admin.reset_password') }}">Reset Password</a></h1>
+    <center>
+        <p><a class="btn btn-info" href="{{ url_for('admin.view_departments_admin') }}">View Departments</a></p><br>
+        <p><a class="btn btn-info" href="{{ url_for('admin.view_bill_types_admin', sort_type="default", filter_type="default" ) }}">View Bill Types</a></p><br>
+        <p><a class="btn btn-info" href="{{ url_for('admin.view_managers_admin', sort_type="default", filter_type="default") }}">View Manager</a></p><br>
+        <p><a class="btn btn-info" href="{{ url_for('admin.view_employees_admin', sort_type="default", filter_type="default") }}">View Employee</a></p><br>
+    </center>
+
+{% endblock %}
