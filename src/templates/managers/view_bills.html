@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+    <div class="reset">
+        <a class="btn btn-warning" href="{{ url_for('employees.reset_password') }}">Reset Password</a>
+    </div>
     <h1>Bills</h1>
     <label class="input-group-addon glyphicon glyphicon-sort" style="width: 50px;">
         <select class="selectpicker show-ticks" onchange="location = this.value;">
@@ -41,7 +44,7 @@
                 <td>{{ bill['employee_name'] }}</td>
                 <td>{{ bill['employee_designation'] }}</td>
                 <td>{{ bill['department_name'] }}</td>
-                <td>{{ bill['bill_type'] }}</td>
+                <td>{{ bill['bill_type'] }}<br>Max Reimbursement: {{ bill['max_reimbursement_amount'] }}</td>
                 <td><a href="{{ bill['bill_image_url'] }}"><img src="{{ bill['bill_image_url'] }}" alt="Image" width="100" height="100"></a></td>
                 <td>{{ bill['date_of_submission'] }}</td>
                 <td>{{ bill['status'] }}</td>

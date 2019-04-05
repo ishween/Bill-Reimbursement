@@ -1,0 +1,12 @@
+li{
+    margin-right: 50px;
+    margin-top: 15px;
+    /*color: crimson;*/
+}
+.topnav-right {
+    margin-left: 225px;
+  float: right;
+}
+.reset{
+    float: right;
+}

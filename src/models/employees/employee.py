@@ -23,13 +23,21 @@ class Employee(object):
 
     def is_login_valid(email, password):
         employee_data = Database.find_one(employeeConstants.COLLECTION, {'email': email})
-        #print(employee_data['password'])
 
         if employee_data is None:
             raise EmployeeError.EmployeeNotExistError("You are not registered yet!")
         if not Utils.check_hashed_password(password, employee_data['password']):
             raise EmployeeError.IncorrectPasswordError("You entered wrong password!")
         return True
+    @classmethod
+    def is_reset_password_valid(cls,email, old_password):
+        employee_data = Database.find_one(employeeConstants.COLLECTION, {'email':email})
+        print(employee_data['password'])
+        if not Utils.check_hashed_password(old_password, employee_data['password']):
+            raise EmployeeError.IncorrectPasswordError("Password does not match")
+
+        return cls(**employee_data)
+
 
     def add_an_employee(company_id, email, name, designation, department_id, date_of_joining, monthly_salary):
         password = employeeConstants.password_generator()

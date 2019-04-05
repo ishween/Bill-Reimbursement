@@ -2,8 +2,7 @@ from flask import Blueprint, request, session, url_for, render_template
 from werkzeug.utils import redirect
 import src.models.employees.error as employeeErrors
 from src.models.employees.employee import Employee
-from src.models.bills.views import add_bill, delete_bill, edit_bill
-import src.decorators as employee_decorators
+from src.db.utils import Utils
 
 __author__ = 'ishween'
 
@@ -45,13 +44,6 @@ def logout_admin():
 def delete_employee(employee_id):
     Employee.get_by_employee_id(employee_id).delete()
 
-
-# @employee_blueprint.route('/showEmployee')
-# def showEmployee():
-#     Employee.all()
-#
-
-
 def edit_employee(designation, monthly_salary, employee_id):
     employee = Employee.get_by_employee_id(employee_id)
 
@@ -63,34 +55,6 @@ def edit_employee(designation, monthly_salary, employee_id):
         employee.update_to_db()
 
 
-@employee_blueprint.route('/addBill', methods=['GET', 'POST'])
-@employee_decorators.requires_login
-def add_bill():
-    if request.method == 'POST':
-        employee_id = request.form['employee_id']
-        bill_type = request.form['bill_type']
-        department_id = request.form['department_id']
-        date_of_submission = request.form['date_of_submission']
-        bill_image = request.form['bill_image']
-
-        add_bill(employee_id, bill_type, department_id, date_of_submission, bill_image)
-
-
-@employee_blueprint.route('/delete_bill/<string:bill_id>', methods=['GET'])
-@employee_decorators.requires_login
-def delete_a_bill(bill_id):
-    delete_bill(bill_id)
-
-
-@employee_blueprint.route('/edit_bill/<string:bill_id>', methods=['POST'])
-@employee_decorators.requires_login
-def edit_a_bill(bill_id):
-    bill_type = request.form['bill_type']
-    bill_image = request.form['bill_image']
-
-    edit_bill(bill_id, bill_type, bill_image)
-
-
 def get_employees(company_id):
     employees = Employee.get_by_id(company_id)
     print(employees)
@@ -100,3 +64,20 @@ def get_employees(company_id):
 def get_by_department_id(department_id):
     employees = Employee.get_by_department_id(department_id)
     return employees
+
+
+@employee_blueprint.route('/employee/reset', methods = ['GET', 'POST'])
+def reset_password():
+    if request.method == 'POST':
+        email = session['email']
+        old_password = request.form['old_password']
+        new_password = request.form['new_password']
+        try:
+            employee = Employee.is_reset_password_valid(email, old_password)
+            employee.password = Utils.hash_password(new_password)
+            employee.update_to_db()
+            return redirect(url_for('bills.view_bills', sort_type="default", filter_type="all"))
+        except employeeErrors.IncorrectPasswordError as error:
+            return error.message
+
+    return render_template('employees/reset_password.html')

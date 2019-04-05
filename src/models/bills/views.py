@@ -3,18 +3,15 @@ from src.models.bills.bill import Bill
 from src.models.bills.constants import send_email
 from src.models.employees.employee import Employee
 from src.models.billTypes.billType import BillType
+from src.models.billTypes.views import get_bill_amount_by_department_and_type
 from src.models.managers.manager import Manager
 from src.models.department.department import Department
+import src.models.bills.error as BillErrors
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 import src.decorators as bills_decorators
 
 bill_blueprint = Blueprint('bills', __name__)
-
-#
-# @bill_blueprint.route('/')
-# def index():
-#     Bill.all()
 
 
 @bill_blueprint.route('/viewBills/<string:sort_type>/<string:filter_type>', methods=['GET'])
@@ -32,19 +29,7 @@ def view_bills(sort_type, filter_type):
         sorted_bills = sorted(filter_bills, key=lambda k: k[sort_type])
     else:
         sorted_bills = filter_bills
-    # print(sorted_bills)
     return render_template('employees/view_bills.html', bills=sorted_bills, sort_type=sort_type, filter_type=filter_type)
-
-#
-# @bill_blueprint.route('/viewBills/sorted/<string:sort_type>', methods=['GET'])
-# def view_bills_sorted(sort_type):
-#     print("yes")
-#     email = session['email']
-#     employee = Employee.get_by_employee_email(email)
-#     bills = Bill.all_bills_for_employee(employee['_id'])
-#     sorted_bills = sorted(bills, key=lambda k: k[sort_type])
-#     print(sorted_bills)
-#     return render_template('employees/view_bills.html', bills=sorted_bills, sort_type=sort_type)
 
 
 @bill_blueprint.route('/add', methods=['GET', 'POST'])
@@ -80,21 +65,7 @@ def add_bill():
 @bills_decorators.requires_login
 def delete_bill(bill_id):
     Bill.delete(bill_id)
-    return redirect(url_for('.view_bills'))
-
-
-#@bill_blueprint.route('/edit/<string:bill_id>', methods=['GET', 'POST'])
-def change_status(bill_id, status):
-    bill = Bill.get_by_id(bill_id)
-
-    bill.status = status
-
-    bill.save_to_db()
-    email = Employee.get_by_id(bill.employee_id)
-    send_email(email, status)
-    #return redirect(url_for('.index'))
-
-    #return render_template('stores/edit_store.html', store=store)
+    return redirect(url_for('.view_bills', sort_type="default", filter_type="all"))
 
 
 @bill_blueprint.route('/editBill/<string:bill_id>', methods=['GET', 'POST'])
@@ -113,8 +84,6 @@ def edit_bill(bill_id):
         if file_to_upload:
             upload_result = upload(file_to_upload)
             url = upload_result['url']
-            # thumbnail_url1, options = cloudinary_url(upload_result['public_id'], format="png", crop="fill", width=100,
-            #                                          height=100)
         if bill_type != "":
             bill.bill_type = bill_type
         if url is not None:
@@ -140,6 +109,7 @@ def view_bills_to_manager(sort_type, filter_type):
         res={}
         res['_id'] = bill['_id']
         res['bill_type'] = bill['bill_type']
+        res['max_reimbursement_amount'] = get_bill_amount_by_department_and_type(manager['department_id'], bill['bill_type'])
         res['bill_image_url'] = bill['bill_image_url']
         res['date_of_submission'] = bill['date_of_submission']
         res['status'] = bill['status']
@@ -166,15 +136,17 @@ def accept_bill(bill_id):
     bill = Bill.get_by_id(bill_id)
     employee_id = bill.employee_id
     employee_email = Employee.get_by_employee_id(employee_id)
-    # if request.method == 'POST':
     reimburse_amount = request.form['reimburse']
 
-    send_email(employee_email.email, reimburse_amount, "accept")
+    try:
+        Bill.isReimbursementAdded(reimburse_amount)
+        send_email(employee_email.email, reimburse_amount, "accept")
+        bill.status = "accept"
+        bill.update_to_db()
+        bill = Bill.get_by_id(bill_id)
+    except BillErrors.ReimbursementAmountNotAdded as error:
+        return error.message
 
-    bill.status = "accept"
-    bill.update_to_db()
-    bill = Bill.get_by_id(bill_id)
-    print(bill)
     return redirect(url_for('.view_bills_to_manager', sort_type="default", filter_type="pending"))
 
 

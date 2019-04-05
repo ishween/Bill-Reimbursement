@@ -2,8 +2,8 @@ from flask import Blueprint, request, session, url_for, render_template
 from werkzeug.utils import redirect
 import src.models.managers.error as managerErrors
 from src.models.managers.manager import Manager
-from src.models.bills.views import change_status
 import src.decorators as manager_decorators
+from src.db.utils import Utils
 
 __author__ = 'ishween'
 
@@ -35,11 +35,6 @@ def add_manager(company_id, email, name, designation, department_id, date_of_joi
     Manager.add_a_manager(company_id, email, name, designation, department_id, date_of_joining)
 
 
-# @manager_blueprint.route('/show_all_bills/<string:department_id>/<string:status>', methods = ['GET'])
-# def show_all_bills(department_id, status):
-#     show_bills(department_id, status)
-
-
 def edit_manager(designation, manager_id):
     manager = Manager.get_by_manager_id(manager_id)
     if designation != "":
@@ -58,20 +53,28 @@ def logout_admin():
     print("logout")
     #return redirect(url_for('home'))
 
-@manager_blueprint.route('/status/<string:bill_id>/<string:status>', methods = ['POST'])
-@manager_decorators.requires_login
-def change_status(bill_id, status):
-    change_status(bill_id, status)
-
 
 def view_managers(company_id):
     managers = Manager.get_by_id(company_id)
-    # for man in managers:
-    #     print(man._id)
-    #print(managers)
     return managers
 
 
 def get_managers_by_department(department_id):
     managers = Manager.get_by_department_id(department_id)
     return managers
+
+@manager_blueprint.route('/manager/reset', methods = ['GET', 'POST'])
+def reset_password():
+    if request.method == 'POST':
+        email = session['email']
+        old_password = request.form['old_password']
+        new_password = request.form['new_password']
+        try:
+            employee = Manager.is_reset_password_valid(email, old_password)
+            employee.password = Utils.hash_password(new_password)
+            employee.update_to_db()
+            return redirect(url_for('bills.view_bills_to_manager', sort_type="default", filter_type="pending"))
+        except managerErrors.IncorrectPasswordError as error:
+            return error.message
+
+    return render_template('managers/reset_password.html')

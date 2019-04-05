@@ -46,3 +46,6 @@ class BillType(object):
 
     def update_to_db(self):
         Database.update(billTypeConstant.COLLECTION, {'_id':self._id}, self.json())
+
+    def get_amount(department_id, type):
+        return Database.find_one(billTypeConstant.COLLECTION, {'department_id': department_id, 'type':type})
