@@ -30,6 +30,15 @@ class Employee(object):
             raise EmployeeError.IncorrectPasswordError("You entered wrong password!")
         return True
 
+    def is_reset_password_valid(email, old_password):
+        employee_data = Database.find_one(employeeConstants.COLLECTION, {'email':email})
+
+        if not Utils.check_hashed_password(old_password, employee_data['password']):
+            raise EmployeeError.IncorrectPasswordError("Password does not match")
+
+        return employee_data
+
+
     def add_an_employee(company_id, email, name, designation, department_id, date_of_joining, monthly_salary):
         password = employeeConstants.password_generator()
         Employee(company_id, email, Utils.hash_password(password), name, designation, department_id, date_of_joining,
