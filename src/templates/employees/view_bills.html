@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 
-
     <div class="reset">
         <a class="btn btn-warning" href="{{ url_for('employees.reset_password') }}">Reset Password</a>
+        <a class="btn btn-success" href="{{ url_for('bills.add_bill') }}"><span class="glyphicon glyphicon-plus"></span> Add Bill</a>
     </div>
     <h1>Bills</h1>
     <label class="input-group-addon glyphicon glyphicon-sort" style="width: 50px;">
@@ -54,5 +54,4 @@
         {% endfor %}
         <tbody>
     </table>
-    <a class="btn btn-success" href="{{ url_for('bills.add_bill') }}"><span class="glyphicon glyphicon-plus"></span> Add Bill</a>
 {% endblock %}
