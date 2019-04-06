@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <h1> Add Director </h1>
+    <div class="form">
+        <form method="post">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="xyz@mail.com">
+            </div>
+            <div class="form-group">
+                <label for="Name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+            </div>
+            <div class="form-group">
+                <label for="designation">Designation</label>
+                <input type="text" class="form-control" id="designation" name="designation" placeholder="Designation">
+            </div>
+            <div class="form-group">
+                <span class="input-group-addon">Please select</span>
+                <label>
+                    <select name="department_id" class="selectpicker form-control" data-width="100%">
+                        {% for department in departments %}
+                            <option value="{{ department._id }}">{{ department.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="date_of_joining">Date Of Joining</label>
+                <input type="date" class="form-control" id="date_of_joining" name="date_of_joining" placeholder="date_of_joining">
+            </div>
+            <center><button type="submit" class="btn btn-success">Add Director</button></center>
+        </form>
+    </div>
+{% endblock %}
