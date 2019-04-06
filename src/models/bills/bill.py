@@ -75,8 +75,6 @@ class Bill(object):
         response['date_of_submission'] = date_of_submission
         response['bill_image_url'] = bill_image_url
         response['status'] = status
-        # Bill(employee_id, manager_id, bill_type, department_id, date_of_submission,
-        #         bill_image_url, status).manager_update_to_db()
         Database.update(billConstant.COLLECTION, {'_id':_id}, response)
 
 

@@ -1,6 +1,5 @@
 from flask import render_template, request, redirect, url_for, Blueprint, session
 from src.models.bills.bill import Bill
-import src.models.bills.bill as billModel
 from src.models.bills.constants import send_email
 from src.models.employees.employee import Employee
 from src.models.billTypes.billType import BillType
@@ -37,7 +36,7 @@ def view_bills(sort_type, filter_type):
 @bill_blueprint.route('/add', methods=['GET', 'POST'])
 @bills_decorators.requires_login
 def add_bill():
-   # print(session.keys())
+    # print(session.keys())
     email = session['email']
     employee = Employee.get_by_employee_email(email)
     employee_id = None
@@ -74,12 +73,13 @@ def add_bill():
 
     if employee is not None:
         return render_template('employees/add_bill.html', upload_result=upload_result, url=url,
-                                thumbnail_url1=thumbnail_url1, bill_types=bill_types,
-                                 employee_name=name, department_id=department_id)
+                               thumbnail_url1=thumbnail_url1, bill_types=bill_types,
+                               employee_name=name, department_id=department_id)
     else:
         return render_template('managers/add_bill.html', upload_result=upload_result, url=url,
                                thumbnail_url1=thumbnail_url1, bill_types=bill_types,
                                manager_name=name, department_id=department_id)
+
 
 @bill_blueprint.route('/delete/<string:bill_id>', methods=['GET'])
 @bills_decorators.requires_login
@@ -234,11 +234,8 @@ def accept_bill(bill_id, type):
     try:
         Bill.isReimbursementAdded(reimburse_amount)
         send_email(email.email, reimburse_amount, "accept")
-        # bill['status'] = "accept"
-        # bill.manager_update_to_db()
         Bill.update(bill_id, bill['bill_type'], employee_id, manager_id, bill['department_id'],
-                            bill['date_of_submission'], bill['bill_image_url'], "accept")
-        # bill = Bill.get_by_id(bill_id)
+                    bill['date_of_submission'], bill['bill_image_url'], "accept")
     except BillErrors.ReimbursementAmountNotAdded as error:
         return error.message
 
@@ -262,10 +259,8 @@ def reject_bill(bill_id, type):
         email = Manager.get_by_manager_id(manager_id)
     send_email(email.email, 0, "reject")
 
-    # bill['status = "reject"
-    # bill.update_to_db()
     Bill.update(bill_id, bill['bill_type'], employee_id, manager_id, bill['department_id'],
-                        bill['date_of_submission'], bill['bill_image_url'], "reject")
+                bill['date_of_submission'], bill['bill_image_url'], "reject")
 
     if type == "employee":
         return redirect(url_for('.view_bills_to_manager', sort_type="default", filter_type="pending"))
