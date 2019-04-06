@@ -1,5 +1,4 @@
-directors/view_bills.html
-{% extends "managers/manager_bar.html" %}
+{% extends "base.html" %}
 {% block content %}
     <div class="reset">
         <a class="btn btn-warning" href="{{ url_for('director.reset_password') }}">Reset Password</a>
@@ -9,7 +8,7 @@ directors/view_bills.html
         <select class="selectpicker show-ticks" onchange="location = this.value;">
             <option>Sort</option>
             <option value="{{ url_for('bills.view_bills_to_director', sort_type="default", filter_type=filter_type) }}">{{ "Default: No Sort" }}</option>
-            <option value="{{ url_for('bills.view_bills_to_director', sort_type="employee_designation", filter_type=filter_type) }}">{{ "Designation" }}</option>
+            <option value="{{ url_for('bills.view_bills_to_director', sort_type="manager_designation", filter_type=filter_type) }}">{{ "Designation" }}</option>
             <option value="{{ url_for('bills.view_bills_to_director', sort_type="date_of_submission", filter_type=filter_type) }}">{{ "Submission Date" }}</option>
             <option value="{{ url_for('bills.view_bills_to_director', sort_type="bill_type", filter_type=filter_type) }}">{{ "Bill Type" }}</option>
         </select>
@@ -51,14 +50,14 @@ directors/view_bills.html
                 <td>{{ bill['status'] }}</td>
                 {% if bill['status'] == "pending" %}
                     <td>
-                        <form action="{{ url_for('bills.accept_bill', bill_id=bill['_id']) }}" method="post">
+                        <form action="{{ url_for('bills.accept_bill', bill_id=bill['_id'], type="manager") }}" method="post">
                             <div><input type="text" class="form-control" id="reimburse" name="reimburse" placeholder="Enter money to Reimburse">
                             </div><br>
                             <button type="submit" class="btn btn-success"> Accept </button>
                         </form><br>
                     </td>
                     <td>
-                        <a class="btn btn-danger" href="{{ url_for('bills.reject_bill', bill_id=bill['_id']) }}"><span class="glyphicon glyphicon-remove-sign"></span> Reject </a>
+                        <a class="btn btn-danger" href="{{ url_for('bills.reject_bill', bill_id=bill['_id'], type="manager") }}"><span class="glyphicon glyphicon-remove-sign"></span> Reject </a>
                     </td>
                 {% else %}
                     <td>
@@ -77,106 +76,3 @@ directors/view_bills.html
         <tbody>
     </table>
 {% endblock %}
-
-directors/login_director.html
-admins/edit_director.html
-
-directors/director.py
-import uuid
-from src.db.database import Database
-from src.db.utils import Utils
-import src.models.directors.constants as directorConstants
-import src.models.directors.errors as DirectorErrors
-
-class Director(object):
-    def __init__(self, company_id, email, password, name, designation, department_id, date_of_joining, _id=None):
-        self.company_id = company_id
-        self.email = email
-        self.password = password
-        self.name = name
-        self.designation = designation
-        self.department_id = department_id
-        self.date_of_joining = date_of_joining
-        self._id = _id if not None else uuid.uuid4().hex
-
-    def is_login_valid(email, password):
-        Director_data = Database.find_one(directorConstants.COLLECTION, {'email':email})
-
-        if Director_data is None:
-            raise DirectorErrors.DirectorNOtExistError("You are not registered yet!")
-        if not Utils.check_hashed_password(password, Director_data['password']):
-            raise DirectorErrors.IncorrectPasswordError("YOu entered wrong password")
-        return True
-
-    def add_a_director(company_id, email, password, name, designation, department_id, date_of_joining):
-        pass
-
-    def get_by_director_id(self):
-        pass
-
-    def get_by_id(self):
-        pass
-
-    def get_by_department_id(self):
-        pass
-
-directors/view.py
-from flask import Blueprint, request, session, url_for, render_template
-from werkzeug.utils import redirect
-import src.models.directors.errors as directorErrors
-from src.models.directors.director import Director
-import src.decorators as manager_decorators
-from src.db.utils import Utils
-
-__author__ = 'ishween'
-
-director_blueprint = Blueprint('director', __name__)
-
-
-@director_blueprint.route('/director/login', methods = ['GET','POST'])
-def login_director():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-
-        try:
-            if Director.is_login_valid(email, password):
-                session['email'] = email
-                return redirect(url_for('manager.to_menu', sort_type="default", filter_type="pending"))
-        except directorErrors.DirectorError as a:
-            return a.message
-
-    return render_template('directors/login_director.html')
-
-
-def add_director(company_id, email, name, designation, department_id, date_of_joining):
-    Director.add_a_director(company_id, email, name, designation, department_id, date_of_joining)
-
-
-def edit_director(designation, director_id):
-    director = Director.get_by_director_id(director_id)
-    if designation != "":
-        director.designation = designation
-        director.update_to_db()
-        return redirect(url_for('admin.view_director_admin', sort_type="default", filter_type="default"))
-    return render_template('admins/edit_director.html')
-
-
-def delete_director(director_id):
-    Director.get_by_director_id(director_id).delete()
-
-@director_blueprint.route('/director/logout')
-def logout_admin():
-    session['email'] = None
-    print("logout")
-    #return redirect(url_for('home'))
-
-
-def view_director(company_id):
-    directors = Director.get_by_id(company_id)
-    return Director
-
-
-def get_directors_by_department(department_id):
-    directors = Director.get_by_department_id(department_id)
-    return directors

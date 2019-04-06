@@ -50,14 +50,14 @@
                 <td>{{ bill['status'] }}</td>
                 {% if bill['status'] == "pending" %}
                     <td>
-                        <form action="{{ url_for('bills.accept_bill', bill_id=bill['_id']) }}" method="post">
+                        <form action="{{ url_for('bills.accept_bill', bill_id=bill['_id'], type="employee") }}" method="post">
                             <div><input type="text" class="form-control" id="reimburse" name="reimburse" placeholder="Enter money to Reimburse">
                             </div><br>
                             <button type="submit" class="btn btn-success"> Accept </button>
                         </form><br>
                     </td>
                     <td>
-                        <a class="btn btn-danger" href="{{ url_for('bills.reject_bill', bill_id=bill['_id']) }}"><span class="glyphicon glyphicon-remove-sign"></span> Reject </a>
+                        <a class="btn btn-danger" href="{{ url_for('bills.reject_bill', bill_id=bill['_id'], type="employee") }}"><span class="glyphicon glyphicon-remove-sign"></span> Reject </a>
                     </td>
                 {% else %}
                     <td>
