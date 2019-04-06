@@ -6,6 +6,7 @@ from src.models.department.views import add_department, view_departments, get_de
 from src.models.billTypes.views import add_bill_type, delete_bill_type, get_bills_type_by_department
 from src.models.managers.views import add_manager, delete_manager, view_managers, get_managers_by_department, edit_manager
 from src.models.employees.views import add_an_employee, delete_employee, get_employees, get_by_department_id, edit_employee
+from src.models.directors.views import add_director, delete_director, get_directors_by_department, edit_director
 import src.decorators as admin_decorators
 from src.db.utils import Utils
 
@@ -65,7 +66,7 @@ def view_departments_admin():
     return render_template('admins/show_departments.html', departments=departments)
 
 
-@admin_blueprint.route('/admin', methods=['GET'])
+@admin_blueprint.route('/menu', methods=['GET'])
 @admin_decorators.requires_login
 def to_menu():
     return render_template('admins/admin_menu.html')
@@ -332,6 +333,94 @@ def admin_edit_employee(employee_id):
     return render_template('admins/edit_employee.html')
 
 
+@admin_blueprint.route('/viewDirectors/<string:sort_type>/<string:filter_type>', methods=['GET'])
+@admin_decorators.requires_login
+def view_directors_admin(sort_type, filter_type):
+    company_id = Admin.get_by_email(session['email'])
+    #managers = view_managers(company_id)
+    departments = view_departments(company_id)
+    response = []
+    directors_response = []
+    department_response = []
+
+    for department in departments:
+        department_response.append(department)
+
+    if filter_type.startswith("department"):
+        department_id = filter_type[10:]
+        directors = get_directors_by_department(department_id)
+        department = get_department(department_id)
+        res = {}
+        res['department_id'] = department_id
+        res['department_name'] = department['name']
+        res['directors'] = []
+        append_director = []
+        for director in directors:
+            print(director)
+            append_director.append(director)
+
+        if sort_type != "default":
+            res['directors'] = sorted(append_director, key=lambda k: k[sort_type])
+        else:
+            res['directors'] = append_director
+        response.append(res)
+    else:
+        for department in department_response:
+            res={}
+            dept = department['_id']
+            res['department_id'] = dept
+            res['department_name'] = department['name']
+            res['directors'] = []
+            append_director = []
+            directors = get_directors_by_department(dept)
+
+            for director in directors:
+                if filter_type != "default" and filter_type == director['name']:
+                    append_director.append(director)
+                elif filter_type == "default":
+                    append_director.append(director)
+                if director['name'] not in directors_response:
+                    directors_response.append(director['name'])
+
+            if sort_type != "default":
+                res['directors'] = sorted(append_director, key=lambda k: k[sort_type])
+            else:
+                res['directors'] = append_director
+            response.append(res)
+
+    response = sorted(response, key=lambda k: k['department_name'])
+    return render_template('admins/show_directors.html', response=response, department_response=department_response, directors_response=directors_response, sort_type=sort_type, filter_type=filter_type)
+
+
+@admin_blueprint.route('/addDirector', methods=['GET', 'POST'])
+@admin_decorators.requires_login
+def add_a_director():
+    company_id = Admin.get_by_email(session['email'])
+    departments = view_departments(company_id)
+
+    if request.method == 'POST':
+        email = request.form['email']
+        name = request.form['name']
+        designation = request.form['designation']
+        department_id = request.form['department_id']
+        date_of_joining = request.form['date_of_joining']
+
+        add_director(company_id, email, name, designation, department_id, date_of_joining)
+
+    return render_template('admins/add_director.html', departments=departments)
+
+
+@admin_blueprint.route('/editDirector/<string:director_id>', methods = ['GET', 'POST'])
+@admin_decorators.requires_login
+def admin_edit_director(director_id):
+    if request.method == 'POST':
+        designation = request.form['designation']
+
+        edit_director(designation, director_id)
+        return redirect(url_for('admin.view_directors_admin', sort_type="default", filter_type="default"))
+    return render_template('admins/edit_director.html')
+
+
 @admin_blueprint.route('/deleteEmployee/<string:employee_id>', methods=['GET'])
 @admin_decorators.requires_login
 def admin_delete_employee(employee_id):
@@ -351,6 +440,12 @@ def admin_delete_manager(manager_id):
     delete_manager(manager_id)
     return redirect(url_for('admin.view_managers_admin', sort_type="default", filter_type="default"))
 
+
+@admin_blueprint.route('/deleteDirector/<string:director_id>', methods=['GET'])
+@admin_decorators.requires_login
+def admin_delete_director(director_id):
+    delete_director(director_id)
+    return redirect(url_for('admin.view_directors_admin', sort_type="default", filter_type="default"))
 
 @admin_blueprint.route('/reset', methods = ['GET', 'POST'])
 def reset_password():

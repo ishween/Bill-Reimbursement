@@ -5,6 +5,7 @@ from src.models.employees.employee import Employee
 from src.models.billTypes.billType import BillType
 from src.models.billTypes.views import get_bill_amount_by_department_and_type
 from src.models.managers.manager import Manager
+from src.models.directors.director import Director
 from src.models.department.department import Department
 import src.models.bills.error as BillErrors
 from cloudinary.uploader import upload
@@ -35,7 +36,7 @@ def view_bills(sort_type, filter_type):
 @bill_blueprint.route('/add', methods=['GET', 'POST'])
 @bills_decorators.requires_login
 def add_bill():
-   # print(session.keys())
+    # print(session.keys())
     email = session['email']
     employee = Employee.get_by_employee_email(email)
     employee_id = None
@@ -72,12 +73,13 @@ def add_bill():
 
     if employee is not None:
         return render_template('employees/add_bill.html', upload_result=upload_result, url=url,
-                                thumbnail_url1=thumbnail_url1, bill_types=bill_types,
-                                 employee_name=name, department_id=department_id)
+                               thumbnail_url1=thumbnail_url1, bill_types=bill_types,
+                               employee_name=name, department_id=department_id)
     else:
         return render_template('managers/add_bill.html', upload_result=upload_result, url=url,
                                thumbnail_url1=thumbnail_url1, bill_types=bill_types,
                                manager_name=name, department_id=department_id)
+
 
 @bill_blueprint.route('/delete/<string:bill_id>', methods=['GET'])
 @bills_decorators.requires_login
@@ -157,6 +159,43 @@ def view_bills_to_manager(sort_type, filter_type):
     return render_template('managers/view_bills.html', response=sorted_bills, sort_type=sort_type, filter_type=filter_type)
 
 
+@bill_blueprint.route('/director/viewBills/<string:sort_type>/<string:filter_type>', methods=['GET'])
+@bills_decorators.requires_login
+def view_bills_to_director(sort_type, filter_type):
+    email = session['email']
+    director = Director.get_by_director_email(email)
+    filter_bills = None
+    if filter_type == "pending" and filter_type is None:
+        filter_bills = Bill.all_bills(director['department_id'], "pending")
+    else:
+        filter_bills = Bill.all_bills(director['department_id'], filter_type)
+    response = []
+    for bill in filter_bills:
+        if 'manager_id' in bill.keys():
+            res={}
+            res['_id'] = bill['_id']
+            res['bill_type'] = bill['bill_type']
+            res['max_reimbursement_amount'] = get_bill_amount_by_department_and_type(director['department_id'], bill['bill_type'])
+            res['bill_image_url'] = bill['bill_image_url']
+            res['date_of_submission'] = bill['date_of_submission']
+            res['status'] = bill['status']
+            manager_id = bill['manager_id']
+            manager = Manager.get_by_manager_id(manager_id)
+            res['manager_name'] = manager.name
+            res['manager_designation'] = manager.designation
+            department = Department.get_by_id(bill['department_id'])
+            res['department_name'] = department['name']
+            response.append(res)
+
+    sorted_bills = None
+    if sort_type == "default":
+        sorted_bills = response
+    else:
+        sorted_bills = sorted(response, key=lambda k: k[sort_type])
+
+    return render_template('directors/view_bills.html', response=sorted_bills, sort_type=sort_type, filter_type=filter_type)
+
+
 @bill_blueprint.route('/manager/viewMyBills/<string:sort_type>/<string:filter_type>', methods=['GET'])
 @bills_decorators.requires_login
 def view_manager_bills(sort_type, filter_type):
@@ -176,35 +215,54 @@ def view_manager_bills(sort_type, filter_type):
                            filter_type=filter_type)
 
 
-@bill_blueprint.route('/manager/accept/<string:bill_id>', methods=['GET', 'POST'])
+@bill_blueprint.route('/manager/accept/<string:bill_id>/<string:type>', methods=['GET', 'POST'])
 @bills_decorators.requires_login
-def accept_bill(bill_id):
-    bill = Bill.get_by_id(bill_id)
-    employee_id = bill.employee_id
-    employee_email = Employee.get_by_employee_id(employee_id)
+def accept_bill(bill_id, type):
+    print(type)
+    bill = Bill.get_by_id_for_manager(bill_id)
+    employee_id = None
+    manager_id = None
+    if type == "employee":
+        employee_id = bill['employee_id']
+        email = Employee.get_by_employee_id(employee_id)
+    else:
+        manager_id = bill['manager_id']
+        email = Manager.get_by_manager_id(manager_id)
+
     reimburse_amount = request.form['reimburse']
 
     try:
         Bill.isReimbursementAdded(reimburse_amount)
-        send_email(employee_email.email, reimburse_amount, "accept")
-        bill.status = "accept"
-        bill.update_to_db()
-        bill = Bill.get_by_id(bill_id)
+        send_email(email.email, reimburse_amount, "accept")
+        Bill.update(bill_id, bill['bill_type'], employee_id, manager_id, bill['department_id'],
+                    bill['date_of_submission'], bill['bill_image_url'], "accept")
     except BillErrors.ReimbursementAmountNotAdded as error:
         return error.message
 
-    return redirect(url_for('.view_bills_to_manager', sort_type="default", filter_type="pending"))
+    if type == "employee":
+        return redirect(url_for('.view_bills_to_manager', sort_type="default", filter_type="pending"))
+    else:
+        return redirect(url_for('.view_bills_to_director', sort_type="default", filter_type="pending"))
 
 
-@bill_blueprint.route('/manager/reject/<string:bill_id>', methods=['GET'])
+@bill_blueprint.route('/manager/reject/<string:bill_id>/<string:type>', methods=['GET'])
 @bills_decorators.requires_login
-def reject_bill(bill_id):
-    bill = Bill.get_by_id(bill_id)
-    employee_id = bill.employee_id
-    email = Employee.get_by_employee_id(employee_id)
+def reject_bill(bill_id, type):
+    bill = Bill.get_by_id_for_manager(bill_id)
+    employee_id = None
+    manager_id = None
+    if type == "employee":
+        employee_id = bill['employee_id']
+        email = Employee.get_by_employee_id(employee_id)
+    else:
+        manager_id = bill['manager_id']
+        email = Manager.get_by_manager_id(manager_id)
     send_email(email.email, 0, "reject")
 
-    bill.status = "reject"
-    bill.update_to_db()
+    Bill.update(bill_id, bill['bill_type'], employee_id, manager_id, bill['department_id'],
+                bill['date_of_submission'], bill['bill_image_url'], "reject")
 
-    return redirect(url_for('.view_bills_to_manager', sort_type="default", filter_type="pending"))
+    if type == "employee":
+        return redirect(url_for('.view_bills_to_manager', sort_type="default", filter_type="pending"))
+    else:
+        return redirect(url_for('.view_bills_to_director', sort_type="default", filter_type="pending"))
