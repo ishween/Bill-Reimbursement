@@ -3,6 +3,7 @@ from werkzeug.utils import redirect
 import src.models.managers.error as managerErrors
 from src.models.managers.manager import Manager
 import src.decorators as manager_decorators
+from src.db.utils import Utils
 
 __author__ = 'ishween'
 
@@ -18,7 +19,7 @@ def login_manager():
         try:
             if Manager.is_login_valid(email, password):
                 session['email'] = email
-                return redirect(url_for('bills.view_bills_to_manager', sort_type="default", filter_type="pending"))
+                return redirect(url_for('manager.to_menu', sort_type="default", filter_type="pending"))
         except managerErrors.ManagerError as a:
             return a.message
 
@@ -61,3 +62,19 @@ def view_managers(company_id):
 def get_managers_by_department(department_id):
     managers = Manager.get_by_department_id(department_id)
     return managers
+
+@manager_blueprint.route('/manager/reset', methods = ['GET', 'POST'])
+def reset_password():
+    if request.method == 'POST':
+        email = session['email']
+        old_password = request.form['old_password']
+        new_password = request.form['new_password']
+        try:
+            employee = Manager.is_reset_password_valid(email, old_password)
+            employee.password = Utils.hash_password(new_password)
+            employee.update_to_db()
+            return redirect(url_for('manager.to_menu', sort_type="default", filter_type="pending"))
+        except managerErrors.IncorrectPasswordError as error:
+            return error.message
+
+    return render_template('managers/reset_password.html')

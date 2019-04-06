@@ -86,4 +86,5 @@ class Employee(object):
     @classmethod
     def get_by_employee_email(cls, email):
         employee = Database.find_one(employeeConstants.COLLECTION, {'email': email})
+        print(employee)
         return employee
