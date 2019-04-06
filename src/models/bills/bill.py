@@ -6,6 +6,8 @@ import src.models.bills.error as billError
 
 class Bill(object):
     def __init__(self, employee_id, manager_id, bill_type, department_id, date_of_submission, bill_image_url, status, _id=None):
+        self.employee_id = None
+        self.manager_id = None
         if employee_id is not None:
             self.employee_id = employee_id
         else:
@@ -24,7 +26,10 @@ class Bill(object):
         Bill(employee_id, manager_id, bill_type, department_id, date_of_submission, bill_image_url, "pending").save_to_db()
 
     def save_to_db(self):
-        Database.insert(billConstant.COLLECTION, self.employee_json())
+        if self.employee_id is not None:
+            Database.insert(billConstant.COLLECTION, self.employee_json())
+        else:
+            Database.insert(billConstant.COLLECTION, self.manager_json())
 
     def employee_json(self):
         return {

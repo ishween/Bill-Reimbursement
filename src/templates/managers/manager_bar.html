@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bill Reimbursement Service</title>
+
+    {% include 'html_dependencies.html' %}
+
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ url_for('manager.to_menu') }}" title="Home" style="background: aqua">Manager</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <div class="topnav-right">
+                {% if session['email'] %}
+{#                    <li><a href="#" ><span class="glyphicon glyphicon-user"></span>{{ session['email'] }}</a></li>#}
+                    <ul><a class="nav-right" href="{{ url_for('admin.logout_admin') }}"><span class="glyphicon glyphicon-log-out"></span> Log out</a>
+                    </ul>
+                {% endif %}
+            </div>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('bills.view_manager_bills', sort_type="default", filter_type="pending") }}">View Your Bills <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('bills.view_bills_to_manager', sort_type="default", filter_type="pending" ) }}">View Your Department Bills</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+
+<div class="content container">
+    {% block content %}
+
+    {% endblock %}
+</div>
+
+</body>
+</html>

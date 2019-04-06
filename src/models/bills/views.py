@@ -35,7 +35,7 @@ def view_bills(sort_type, filter_type):
 @bill_blueprint.route('/add', methods=['GET', 'POST'])
 @bills_decorators.requires_login
 def add_bill():
-    print(session.keys())
+   # print(session.keys())
     email = session['email']
     employee = Employee.get_by_employee_email(email)
     employee_id = None
@@ -49,6 +49,7 @@ def add_bill():
         manager_id = manager['_id']
         name = manager['name']
         department_id = manager['department_id']
+    #    print(manager)
     bill_types = BillType.all_bills_type_by_department_id(department_id)
     url = None
     thumbnail_url1 = None
@@ -131,20 +132,21 @@ def view_bills_to_manager(sort_type, filter_type):
         filter_bills = Bill.all_bills(manager['department_id'], filter_type)
     response = []
     for bill in filter_bills:
-        res={}
-        res['_id'] = bill['_id']
-        res['bill_type'] = bill['bill_type']
-        res['max_reimbursement_amount'] = get_bill_amount_by_department_and_type(manager['department_id'], bill['bill_type'])
-        res['bill_image_url'] = bill['bill_image_url']
-        res['date_of_submission'] = bill['date_of_submission']
-        res['status'] = bill['status']
-        employee_id = bill['employee_id']
-        employee = Employee.get_by_employee_id(employee_id)
-        res['employee_name'] = employee.name
-        res['employee_designation'] = employee.designation
-        department = Department.get_by_id(bill['department_id'])
-        res['department_name'] = department['name']
-        response.append(res)
+        if 'employee_id' in bill.keys():
+            res={}
+            res['_id'] = bill['_id']
+            res['bill_type'] = bill['bill_type']
+            res['max_reimbursement_amount'] = get_bill_amount_by_department_and_type(manager['department_id'], bill['bill_type'])
+            res['bill_image_url'] = bill['bill_image_url']
+            res['date_of_submission'] = bill['date_of_submission']
+            res['status'] = bill['status']
+            employee_id = bill['employee_id']
+            employee = Employee.get_by_employee_id(employee_id)
+            res['employee_name'] = employee.name
+            res['employee_designation'] = employee.designation
+            department = Department.get_by_id(bill['department_id'])
+            res['department_name'] = department['name']
+            response.append(res)
 
     sorted_bills = None
     if sort_type == "default":
