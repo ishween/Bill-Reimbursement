@@ -66,7 +66,7 @@ def view_departments_admin():
     return render_template('admins/show_departments.html', departments=departments)
 
 
-@admin_blueprint.route('/admin', methods=['GET'])
+@admin_blueprint.route('/menu', methods=['GET'])
 @admin_decorators.requires_login
 def to_menu():
     return render_template('admins/admin_menu.html')
