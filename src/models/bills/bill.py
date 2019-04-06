@@ -5,8 +5,13 @@ import src.models.bills.error as billError
 
 
 class Bill(object):
-    def __init__(self, employee_id, bill_type, department_id, date_of_submission, bill_image_url, status, _id=None):
-        self.employee_id = employee_id
+    def __init__(self, employee_id, manager_id, bill_type, department_id, date_of_submission, bill_image_url, status, _id=None):
+        self.employee_id = None
+        self.manager_id = None
+        if employee_id is not None:
+            self.employee_id = employee_id
+        else:
+            self.manager_id = manager_id
         self.bill_type = bill_type
         self.department_id = department_id
         self.date_of_submission = date_of_submission
@@ -17,16 +22,31 @@ class Bill(object):
     def __repr__(self):
         return "<Bill {}>".format(self.bill_type, self.department_id, self.date_of_submission, self.bill_image_url)
 
-    def add_bill(employee_id, bill_type, department_id, date_of_submission, bill_image_url):
-        Bill(employee_id, bill_type, department_id, date_of_submission, bill_image_url, "pending").save_to_db()
+    def add_bill(bill_type, employee_id, manager_id, department_id, date_of_submission, bill_image_url):
+        Bill(employee_id, manager_id, bill_type, department_id, date_of_submission, bill_image_url, "pending").save_to_db()
 
     def save_to_db(self):
-        Database.insert(billConstant.COLLECTION, self.json())
+        if self.employee_id is not None:
+            Database.insert(billConstant.COLLECTION, self.employee_json())
+        else:
+            Database.insert(billConstant.COLLECTION, self.manager_json())
 
-    def json(self):
+    def employee_json(self):
         return {
             "_id": self._id,
             "employee_id": self.employee_id,
+            "bill_type": self.bill_type,
+            "department_id": self.department_id,
+            "date_of_submission": self.date_of_submission,
+            "bill_image_url": self.bill_image_url,
+            "status": self.status
+        }
+
+
+    def manager_json(self):
+        return {
+            "_id": self._id,
+            "manager_id": self.manager_id,
             "bill_type": self.bill_type,
             "department_id": self.department_id,
             "date_of_submission": self.date_of_submission,
@@ -54,8 +74,19 @@ class Bill(object):
     def all_bills_for_employee_filter(cls, employee_id, filter_type):
         return Database.find(billConstant.COLLECTION, {'employee_id': employee_id, 'status': filter_type})
 
-    def update_to_db(self):
-        Database.update(billConstant.COLLECTION, {'_id': self._id}, self.json())
+    @classmethod
+    def all_bills_for_manager(cls, manager_id):
+        return Database.find(billConstant.COLLECTION, {'manager_id': manager_id})
+
+    @classmethod
+    def all_bills_for_manager_filter(cls, manager_id, filter_type):
+        return Database.find(billConstant.COLLECTION, {'manager_id': manager_id, 'status': filter_type})
+
+    def employee_update_to_db(self):
+        Database.update(billConstant.COLLECTION, {'_id': self._id}, self.employee_json())
+
+    def manager_update_to_db(self):
+        Database.update(billConstant.COLLECTION, {'_id':self._id}, self.manager_json)
 
     def isReimbursementAdded(reimbursement_amount):
         if reimbursement_amount == "":
