@@ -1,4 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Menu</h1>
+
+{#    <div class="reset">#}
+{#        <a class="btn btn-warning" href="{{ url_for('admin.reset_password') }}">Reset Password</a>#}
+{#    </div>#}
+    <h1 class="header">Manager Functions <a class="btn btn-warning reset" href="{{ url_for('manager.reset_password') }}">Reset Password</a></h1>
+    <center>
+        <p><a class="btn btn-info" href="{{ url_for('bills.view_manager_bills', sort_type="default", filter_type="pending") }}">View Your Bills</a></p><br>
+        <p><a class="btn btn-info" href="{{ url_for('bills.view_bills_to_manager', sort_type="default", filter_type="pending" ) }}">View Employees Bills</a></p><br>
+    </center>
+
 {% endblock %}
