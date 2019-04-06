@@ -62,6 +62,15 @@ class Admin(object):
         return True
 
     @classmethod
+    def is_reset_password_valid(cls, email, old_password):
+        admin_data = Database.find_one(adminConstant.COLLECTION, {'email': email})
+        #print(manager_data['password'])
+        if not Utils.check_hashed_password(old_password, admin_data['password']):
+            raise adminErrors.IncorrectPasswordError("Password does not match")
+
+        return cls(**admin_data)
+
+    @classmethod
     def get_by_email(cls, email):
         company_id = Database.find_one(adminConstant.COLLECTION, {'email':email})['_id']
         return company_id

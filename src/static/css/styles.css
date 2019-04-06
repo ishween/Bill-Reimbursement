@@ -4,6 +4,13 @@ li{
     /*color: crimson;*/
 }
 .topnav-right {
+    margin-top: 15px;
     margin-left: 225px;
-  float: right;
+    float: right;
+}
+.reset{
+    float: right;
+}
+.add{
+    float: right;
 }

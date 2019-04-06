@@ -25,6 +25,15 @@ class Manager(object):
             raise ManagerError.IncorrectPasswordError("You entered wrong password!")
         return True
 
+    @classmethod
+    def is_reset_password_valid(cls, email, old_password):
+        manager_data = Database.find_one(managerConstants.COLLECTION, {'email': email})
+        print(manager_data['password'])
+        if not Utils.check_hashed_password(old_password, manager_data['password']):
+            raise ManagerError.IncorrectPasswordError("Password does not match")
+
+        return cls(**manager_data)
+
     def add_a_manager(company_id, email, name, designation, department_id, date_of_joining):
         password = managerConstants.password_generator()
         Manager(company_id, email, Utils.hash_password(password), name, designation, department_id, date_of_joining).save_to_db()

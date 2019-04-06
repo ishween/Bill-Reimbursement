@@ -1,5 +1,8 @@
-{% extends "base.html" %}
+{% extends "managers/manager_bar.html" %}
 {% block content %}
+    <div class="reset">
+        <a class="btn btn-warning" href="{{ url_for('manager.reset_password') }}">Reset Password</a>
+    </div>
     <h1>Bills</h1>
     <label class="input-group-addon glyphicon glyphicon-sort" style="width: 50px;">
         <select class="selectpicker show-ticks" onchange="location = this.value;">
