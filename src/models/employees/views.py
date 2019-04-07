@@ -147,30 +147,6 @@ def admin_delete_employee(employee_id):
     Employee.get_by_employee_id(employee_id).delete()
     return redirect(url_for('employees.view_employees_admin', sort_type="default", filter_type="default"))
 
-# def delete_employee(employee_id):
-#     Employee.get_by_employee_id(employee_id).delete()
-
-# def edit_employee(designation, monthly_salary, employee_id):
-#     employee = Employee.get_by_employee_id(employee_id)
-#
-#     if designation != "":
-#         employee.designation = designation
-#     if monthly_salary != "":
-#         employee.monthly_salary = monthly_salary
-#
-#     employee.update_to_db()
-
-
-# def get_employees(company_id):
-#     employees = Employee.get_by_id(company_id)
-#     print(employees)
-#     return employees
-
-
-# def get_by_department_id(department_id):
-#     employees = Employee.get_by_department_id(department_id)
-#     return employees
-
 
 @employee_blueprint.route('/employee/reset', methods = ['GET', 'POST'])
 def reset_password():
