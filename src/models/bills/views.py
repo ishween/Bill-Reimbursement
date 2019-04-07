@@ -11,6 +11,8 @@ import src.models.bills.error as BillErrors
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 import src.decorators as bills_decorators
+import matplotlib.pyplot as plt
+import src.static.images as plot
 
 bill_blueprint = Blueprint('bills', __name__)
 
@@ -33,12 +35,12 @@ def view_bills(sort_type, filter_type):
     return render_template('employees/view_bills.html', bills=sorted_bills, sort_type=sort_type, filter_type=filter_type)
 
 
-@bill_blueprint.route('/billGraph', methods = ['GET'])
-def view_employee_bill_pie():
-    email = session['email']
-    employee = Employee.get_by_employee_email(email)
-    employee_id = employee['_id']
-    bills = Bill.all_bills_for_employee(employee_id)
+@bill_blueprint.route('/billGraph/<path:path>', methods = ['GET', 'POST'])
+def view_employee_bill_pie(path):
+    # email = session['email']
+    # employee = Employee.get_by_employee_email(email)
+    # employee_id = employee['_id']
+    bills = Bill.all_bills_for_employee("11ccdad62179415a95aada3d5dc5f14c")
     accept = reject = pending = 0
     for bill in bills:
         if bill['status'] == 'accept':
@@ -50,7 +52,14 @@ def view_employee_bill_pie():
 
     labels = "Pending", "Accept", "Reject"
     sizes = [pending/100, accept/100, reject/100]
-
+    # print(sizes)
+    fig1, ax1 = plt.subplots()
+    ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
+            shadow=True, startangle=90)
+    ax1.axis('equal')
+    plt.savefig('plot.png')
+    # plt.show()
+    return render_template('employees/plot.html', name='plot', url='plot.png')
 
 
 @bill_blueprint.route('/add', methods=['GET', 'POST'])
