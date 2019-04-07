@@ -6,7 +6,7 @@
 {#    </div>#}
     <h1 class="header">Manager Functions <a class="btn btn-warning reset" href="{{ url_for('manager.reset_password') }}">Reset Password</a></h1>
     <center>
-        <p><a class="btn btn-info" href="{{ url_for('bills.view_manager_bills', sort_type="default", filter_type="pending") }}">View Your Bills</a></p><br>
+        <p><a class="btn btn-info" href="{{ url_for('bills.view_manager_bills', sort_type="default", filter_type="all") }}">View Your Bills</a></p><br>
         <p><a class="btn btn-info" href="{{ url_for('bills.view_bills_to_manager', sort_type="default", filter_type="pending" ) }}">View Employees Bills</a></p><br>
     </center>
 

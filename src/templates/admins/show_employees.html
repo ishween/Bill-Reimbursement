@@ -1,23 +1,23 @@
 {% extends "admins/admin_bar.html" %}
 {% block content %}
-    <h1>Employees <a class="btn btn-success add" href="{{ url_for('admin.add_employee') }}"><span class="glyphicon glyphicon-plus"></span> Add Employee</a>
+    <h1>Employees <a class="btn btn-success add" href="{{ url_for('employees.add_employee') }}"><span class="glyphicon glyphicon-plus"></span> Add Employee</a>
 </h1>
     <label class="input-group-addon glyphicon glyphicon-sort" style="width: 50px;">
         <select class="selectpicker show-ticks" onchange="location = this.value;">
             <option>Sort</option>
-            <option value="{{ url_for('admin.view_employees_admin', sort_type="default", filter_type=filter_type) }}">{{ "Default: No Sort" }}</option>
-            <option value="{{ url_for('admin.view_employees_admin', sort_type="name", filter_type=filter_type) }}">{{ "Name" }}</option>
-            <option value="{{ url_for('admin.view_employees_admin', sort_type="designation", filter_type=filter_type) }}">{{ "Designation" }}</option>
-            <option value="{{ url_for('admin.view_employees_admin', sort_type="date_of_joining", filter_type=filter_type) }}">{{ "Joining Date" }}</option>
+            <option value="{{ url_for('employees.view_employees_admin', sort_type="default", filter_type=filter_type) }}">{{ "Default: No Sort" }}</option>
+            <option value="{{ url_for('employees.view_employees_admin', sort_type="name", filter_type=filter_type) }}">{{ "Name" }}</option>
+            <option value="{{ url_for('employees.view_employees_admin', sort_type="designation", filter_type=filter_type) }}">{{ "Designation" }}</option>
+            <option value="{{ url_for('employees.view_employees_admin', sort_type="date_of_joining", filter_type=filter_type) }}">{{ "Joining Date" }}</option>
         </select>
     </label>
     <label class="input-group-addon glyphicon glyphicon-filter" style="width: 50px;">
         <select class="selectpicker" onchange="location = this.value;">
             <option>Filter</option>
-            <option value="{{ url_for('admin.view_employees_admin', sort_type=sort_type, filter_type="default") }}">{{ "All" }}</option>
+            <option value="{{ url_for('employees.view_employees_admin', sort_type=sort_type, filter_type="default") }}">{{ "All" }}</option>
             <option disabled>Departments</option>
             {% for dept in department_response %}
-                <option value="{{ url_for('admin.view_employees_admin', sort_type=sort_type, filter_type="department"+dept['_id']) }}">{{ dept['name'] }}</option>
+                <option value="{{ url_for('employees.view_employees_admin', sort_type=sort_type, filter_type="department"+dept['_id']) }}">{{ dept['name'] }}</option>
             {% endfor %}
         </select>
     </label>
@@ -45,8 +45,8 @@
                     <td>{{ employee['designation'] }}</td>
                     <td>{{ employee['date_of_joining'] }}</td>
                     <td>{{ employee['monthly_salary'] }}</td>
-                    <td><a class="btn btn-warning" href="{{ url_for('admin.admin_edit_employee', employee_id=employee['_id']) }}"> Edit Employee</a></td>
-                    <td><a class="btn btn-danger" href="{{ url_for('admin.admin_delete_employee', employee_id=employee['_id']) }}">Delete Employee</a> </td>
+                    <td><a class="btn btn-warning" href="{{ url_for('employees.admin_edit_employee', employee_id=employee['_id']) }}"> Edit Employee</a></td>
+                    <td><a class="btn btn-danger" href="{{ url_for('employees.admin_delete_employee', employee_id=employee['_id']) }}">Delete Employee</a> </td>
                 </tr>
             {% endfor %}
             <tbody>
