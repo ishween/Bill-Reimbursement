@@ -3,6 +3,9 @@ from werkzeug.utils import redirect
 import src.models.employees.error as employeeErrors
 from src.models.employees.employee import Employee
 from src.db.utils import Utils
+import src.decorators as employee_decorators
+from src.models.admins.views import get_by_email_company_id
+from src.models.department.views import view_departments, get_department
 
 __author__ = 'ishween'
 
@@ -40,30 +43,133 @@ def logout_admin():
     print("logout")
     # return redirect(url_for('home'))
 
+@employee_blueprint.route('/viewEmployees/<string:sort_type>/<string:filter_type>', methods=['GET'])
+@employee_decorators.requires_login
+def view_employees_admin(sort_type, filter_type):
+    company_id = get_by_email_company_id()
+    departments = view_departments(company_id)
+    response = []
+    department_response = []
+    for department in departments:
+        department_response.append(department)
 
-def delete_employee(employee_id):
-    Employee.get_by_employee_id(employee_id).delete()
+    if filter_type.startswith("department"):
+        department_id = filter_type[10:]
+        # employees = get_by_department_id(department_id)
+        employees = Employee.get_by_department_id(department_id)
+        department = get_department(department_id)
+        res={}
+        res['department_id'] = department_id
+        res['department_name'] = department['name']
+        res['employees'] = []
+        append_employees = []
 
-def edit_employee(designation, monthly_salary, employee_id):
-    employee = Employee.get_by_employee_id(employee_id)
+        for employee in employees:
+            append_employees.append(employee)
 
-    if designation != "":
-        employee.designation = designation
-    if monthly_salary != "":
-        employee.monthly_salary = monthly_salary
+        if sort_type != "default":
+            res['employees'] = sorted(append_employees, key=lambda k: k[sort_type])
+        else:
+            res['employees'] = append_employees
+        response.append(res)
+    else:
+        # for department in departments:
+        #     print(department) - I am unable to use departments again for iterating why so in python?
+        for department in department_response:
+            res={}
+            res['department_id'] = department['_id']
+            res['department_name'] = department['name']
+            res['employees'] = []
+            append_employees = []
+
+            # employees = get_by_department_id(department['_id'])
+            employees = Employee.get_by_department_id(department['_id'])
+            for employee in employees:
+                append_employees.append(employee)
+
+            if sort_type != "default":
+                res['employees'] = sorted(append_employees, key=lambda k: k[sort_type])
+            else:
+                res['employees'] = append_employees
+
+            response.append(res)
+
+    response = sorted(response, key=lambda k: k['department_name'])
+    return render_template('admins/show_employees.html', response=response, department_response=department_response, sort_type=sort_type, filter_type=filter_type)
+
+
+@employee_blueprint.route('/addEmployee', methods=['GET', 'POST'])
+@employee_decorators.requires_login
+def add_employee():
+    company_id = get_by_email_company_id()
+    departments = view_departments(company_id)
+
+    if request.method == 'POST':
+        email = request.form['email']
+        name = request.form['name']
+        designation = request.form['designation']
+        department_id = request.form['department_id']
+        date_of_joining = request.form['date_of_joining']
+        monthly_salary = request.form['monthly_salary']
+
+        add_an_employee(company_id, email, name, designation, department_id, date_of_joining, monthly_salary)
+
+    return render_template('admins/add_employee.html', departments=departments)
+
+
+@employee_blueprint.route('/edit/<string:employee_id>', methods=['GET', 'POST'])
+@employee_decorators.requires_login
+def admin_edit_employee(employee_id):
+    if request.method == 'POST':
+        designation = request.form['designation']
+        monthly_salary = request.form['monthly_salary']
+
+        print(type(designation))
+        print(type(monthly_salary))
+
+        # edit_employee(designation, monthly_salary, employee_id)
+        employee = Employee.get_by_employee_id(employee_id)
+
+        if designation != "":
+            employee.designation = designation
+        if monthly_salary != "":
+            employee.monthly_salary = monthly_salary
 
         employee.update_to_db()
+        return redirect(url_for('employees.view_employees_admin', sort_type="default", filter_type="default"))
+    return render_template('admins/edit_employee.html')
 
 
-def get_employees(company_id):
-    employees = Employee.get_by_id(company_id)
-    print(employees)
-    return employees
+@employee_blueprint.route('/deleteEmployee/<string:employee_id>', methods=['GET'])
+@employee_decorators.requires_login
+def admin_delete_employee(employee_id):
+    # delete_employee(employee_id)
+    Employee.get_by_employee_id(employee_id).delete()
+    return redirect(url_for('employees.view_employees_admin', sort_type="default", filter_type="default"))
+
+# def delete_employee(employee_id):
+#     Employee.get_by_employee_id(employee_id).delete()
+
+# def edit_employee(designation, monthly_salary, employee_id):
+#     employee = Employee.get_by_employee_id(employee_id)
+#
+#     if designation != "":
+#         employee.designation = designation
+#     if monthly_salary != "":
+#         employee.monthly_salary = monthly_salary
+#
+#     employee.update_to_db()
 
 
-def get_by_department_id(department_id):
-    employees = Employee.get_by_department_id(department_id)
-    return employees
+# def get_employees(company_id):
+#     employees = Employee.get_by_id(company_id)
+#     print(employees)
+#     return employees
+
+
+# def get_by_department_id(department_id):
+#     employees = Employee.get_by_department_id(department_id)
+#     return employees
 
 
 @employee_blueprint.route('/employee/reset', methods = ['GET', 'POST'])
