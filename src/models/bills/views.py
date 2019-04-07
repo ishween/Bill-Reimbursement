@@ -33,6 +33,26 @@ def view_bills(sort_type, filter_type):
     return render_template('employees/view_bills.html', bills=sorted_bills, sort_type=sort_type, filter_type=filter_type)
 
 
+@bill_blueprint.route('/billGraph', methods = ['GET'])
+def view_employee_bill_pie():
+    email = session['email']
+    employee = Employee.get_by_employee_email(email)
+    employee_id = employee['_id']
+    bills = Bill.all_bills_for_employee(employee_id)
+    accept = reject = pending = 0
+    for bill in bills:
+        if bill['status'] == 'accept':
+            accept = accept + 1
+        elif bill['status'] == 'reject':
+            reject = reject + 1
+        else:
+            pending = pending + 1
+
+    labels = "Pending", "Accept", "Reject"
+    sizes = [pending/100, accept/100, reject/100]
+
+
+
 @bill_blueprint.route('/add', methods=['GET', 'POST'])
 @bills_decorators.requires_login
 def add_bill():
