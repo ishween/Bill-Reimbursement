@@ -1,6 +1,6 @@
 from flask import Blueprint, request, session, url_for, render_template
 from werkzeug.utils import redirect
-import src.models.employees.error as employeeErrors
+import src.models.employees.error as employee_errors
 from src.models.employees.employee import Employee
 from src.db.utils import Utils
 import src.decorators as employee_decorators
@@ -22,19 +22,32 @@ def login_employee():
             if Employee.is_login_valid(email, password):
                 session['email'] = email
                 return redirect(url_for('bills.view_bills', sort_type="default", filter_type="all"))
-        except employeeErrors.EmployeeError as a:
+        except employee_errors.EmployeeError as a:
             return a.message
 
     return render_template('employees/login_employee.html')
 
 
+@employee_blueprint.route('/employee/reset', methods = ['GET', 'POST'])
+def reset_password():
+    if request.method == 'POST':
+        email = session['email']
+        old_password = request.form['old_password']
+        new_password = request.form['new_password']
+        try:
+            employee = Employee.is_reset_password_valid(email, old_password)
+            employee.password = Utils.hash_password(new_password)
+            employee.update_to_db()
+            return redirect(url_for('bills.view_bills', sort_type="default", filter_type="all"))
+        except employee_errors.IncorrectPasswordError as error:
+            return error.message
+
+    return render_template('employees/reset_password.html')
+
+
 @employee_blueprint.route('/employee', methods=['GET'])
 def to_menu():
     return render_template('employees/view_bills.html')
-
-
-def add_an_employee(company_id, email, name, designation, department_id, date_of_joining, monthly_salary):
-    Employee.add_an_employee(company_id, email, name, designation, department_id, date_of_joining, monthly_salary)
 
 
 @employee_blueprint.route('/employee/logout')
@@ -112,7 +125,7 @@ def add_employee():
         date_of_joining = request.form['date_of_joining']
         monthly_salary = request.form['monthly_salary']
 
-        add_an_employee(company_id, email, name, designation, department_id, date_of_joining, monthly_salary)
+        Employee.add_an_employee(company_id, email, name, designation, department_id, date_of_joining, monthly_salary)
 
     return render_template('admins/add_employee.html', departments=departments)
 
@@ -146,20 +159,3 @@ def admin_delete_employee(employee_id):
     # delete_employee(employee_id)
     Employee.get_by_employee_id(employee_id).delete()
     return redirect(url_for('employees.view_employees_admin', sort_type="default", filter_type="default"))
-
-
-@employee_blueprint.route('/employee/reset', methods = ['GET', 'POST'])
-def reset_password():
-    if request.method == 'POST':
-        email = session['email']
-        old_password = request.form['old_password']
-        new_password = request.form['new_password']
-        try:
-            employee = Employee.is_reset_password_valid(email, old_password)
-            employee.password = Utils.hash_password(new_password)
-            employee.update_to_db()
-            return redirect(url_for('bills.view_bills', sort_type="default", filter_type="all"))
-        except employeeErrors.IncorrectPasswordError as error:
-            return error.message
-
-    return render_template('employees/reset_password.html')
