@@ -32,15 +32,14 @@ def view_bills(sort_type, filter_type):
         sorted_bills = sorted(filter_bills, key=lambda k: k[sort_type])
     else:
         sorted_bills = filter_bills
-    return render_template('employees/view_bills.html', bills=sorted_bills, sort_type=sort_type, filter_type=filter_type)
+
+    url = view_employee_bill_pie(employee['_id'])
+    return render_template('employees/view_bills.html', bills=sorted_bills, sort_type=sort_type, filter_type=filter_type, url=url)
 
 
-@bill_blueprint.route('/billGraph/<path:path>', methods = ['GET', 'POST'])
-def view_employee_bill_pie(path):
-    # email = session['email']
-    # employee = Employee.get_by_employee_email(email)
-    # employee_id = employee['_id']
-    bills = Bill.all_bills_for_employee("11ccdad62179415a95aada3d5dc5f14c")
+def view_employee_bill_pie(employee_id):
+    bills = Bill.all_bills_for_employee(employee_id)
+
     accept = reject = pending = 0
     for bill in bills:
         if bill['status'] == 'accept':
@@ -49,18 +48,22 @@ def view_employee_bill_pie(path):
             reject = reject + 1
         else:
             pending = pending + 1
-
     labels = "Pending", "Accept", "Reject"
-    sizes = [pending/100, accept/100, reject/100]
-    # print(sizes)
+    sizes = [pending / 100, accept / 100, reject / 100]
+    colors = ['gold', 'yellowgreen', 'lightskyblue']
     fig1, ax1 = plt.subplots()
-    ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
+    ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%',
             shadow=True, startangle=90)
     ax1.axis('equal')
     plt.savefig('plot.png')
-    # plt.show()
-    return render_template('employees/plot.html', name='plot', url='plot.png')
 
+    upload_result = upload('plot.png')
+    url = upload_result['url']
+    thumbnail_url1, options = cloudinary_url(upload_result['public_id'], format="png", crop="fill", width=100,
+                                                     height=100)
+    # plt.show()
+    # return render_template('employees/plot.html', url=thumbnail_url1)
+    return url
 
 @bill_blueprint.route('/add', methods=['GET', 'POST'])
 @bills_decorators.requires_login
