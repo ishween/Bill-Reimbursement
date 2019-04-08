@@ -49,11 +49,12 @@ def view_employee_bill_pie(employee_id):
         else:
             pending = pending + 1
     labels = "Pending", "Accept", "Reject"
-    sizes = [pending / 100, accept / 100, reject / 100]
+    sum = accept + pending + reject
+    sizes = [pending / sum, accept / sum, reject / sum]
     colors = ['gold', 'yellowgreen', 'lightskyblue']
     fig1, ax1 = plt.subplots()
-    ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%',
-            shadow=True, startangle=90)
+    ax1.pie(sizes, labels=labels, colors=colors, autopct='%.0f%%',
+            shadow=True, startangle=90, radius=0.5)
     ax1.axis('equal')
     plt.savefig('plot.png')
 
