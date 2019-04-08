@@ -12,7 +12,6 @@ from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 import src.decorators as bills_decorators
 import matplotlib.pyplot as plt
-import src.static.images as plot
 
 bill_blueprint = Blueprint('bills', __name__)
 
@@ -63,7 +62,6 @@ def view_employee_bill_pie(employee_id):
     thumbnail_url1, options = cloudinary_url(upload_result['public_id'], format="png", crop="fill", width=100,
                                                      height=100)
     # plt.show()
-    # return render_template('employees/plot.html', url=thumbnail_url1)
     return url
 
 @bill_blueprint.route('/add', methods=['GET', 'POST'])
