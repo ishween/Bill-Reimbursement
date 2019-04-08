@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from src.db.database import Database
 
-app = Flask(__name__, static_url_path="")
+app = Flask(__name__)
 app.secret_key = 'ishween'
 app.config.from_object('config')
 
