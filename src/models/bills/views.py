@@ -12,6 +12,7 @@ from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 import src.decorators as bills_decorators
 import matplotlib.pyplot as plt
+import pandas as pd
 
 
 bill_blueprint = Blueprint('bills', __name__)
@@ -50,8 +51,10 @@ def view_bill_pie(_id):
             pending = pending + 1
     sum = accept + pending + reject
     if sum is not 0:
+
         labels = "Pending", "Accept", "Reject"
         sizes = [pending / sum, accept / sum, reject / sum]
+        pd.DataFrame(sizes, columns=labels)
         colors = ['gold', 'yellowgreen', 'lightskyblue']
         fig1, ax1 = plt.subplots()
         ax1.pie(sizes, labels=labels, colors=colors, autopct='%.0f%%',
