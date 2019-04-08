@@ -6,11 +6,10 @@
 {#    </div>#}
     <h1 class="header">Admin Functions <a class="btn btn-warning reset" href="{{ url_for('admin.reset_password') }}">Reset Password</a></h1>
     <center>
-        <p><a class="btn btn-info" href="{{ url_for('admin.view_departments_admin') }}">View Departments</a></p><br>
-        <p><a class="btn btn-info" href="{{ url_for('admin.view_bill_types_admin', sort_type="default", filter_type="default" ) }}">View Bill Types</a></p><br>
-        <p><a class="btn btn-info" href="{{ url_for('admin.view_managers_admin', sort_type="default", filter_type="default") }}">View Managers</a></p><br>
-        <p><a class="btn btn-info" href="{{ url_for('admin.view_employees_admin', sort_type="default", filter_type="default") }}">View Employees</a></p><br>
-        <p><a class="btn btn-info" href="{{ url_for('admin.view_directors_admin', sort_type="default", filter_type="default") }}">View Directors</a> </p>
+        <p><a class="btn btn-info" href="{{ url_for('department.view_departments_admin') }}">View Departments</a></p><br>
+        <p><a class="btn btn-info" href="{{ url_for('billType.view_bill_types_admin', sort_type="default", filter_type="default" ) }}">View Bill Types</a></p><br>
+        <p><a class="btn btn-info" href="{{ url_for('manager.view_managers_admin', sort_type="default", filter_type="default") }}">View Managers</a></p><br>
+        <p><a class="btn btn-info" href="{{ url_for('employees.view_employees_admin', sort_type="default", filter_type="default") }}">View Employees</a></p><br>
     </center>
 
 {% endblock %}

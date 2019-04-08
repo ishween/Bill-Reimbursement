@@ -1,27 +1,27 @@
 {% extends "admins/admin_bar.html" %}
 {% block content %}
-    <h1>Director <a class="btn btn-success add" href="{{ url_for('admin.add_a_director') }}"><span class="glyphicon glyphicon-plus"></span> Add Director</a>
+    <h1>Director <a class="btn btn-success add" href="{{ url_for('director.add_a_director') }}"><span class="glyphicon glyphicon-plus"></span> Add Director</a>
 </h1>
     <label class="input-group-addon glyphicon glyphicon-sort" style="width: 50px;">
         <select class="selectpicker show-ticks" onchange="location = this.value;">
             <option>Sort</option>
-            <option value="{{ url_for('admin.view_directors_admin', sort_type="default", filter_type=filter_type) }}">{{ "Default: No Sort" }}</option>
-            <option value="{{ url_for('admin.view_directors_admin', sort_type="name", filter_type=filter_type) }}">{{ "Name" }}</option>
-            <option value="{{ url_for('admin.view_directors_admin', sort_type="designation", filter_type=filter_type) }}">{{ "Designation" }}</option>
-            <option value="{{ url_for('admin.view_directors_admin', sort_type="date_of_joining", filter_type=filter_type) }}">{{ "Joining Date" }}</option>
+            <option value="{{ url_for('director.view_directors_admin', sort_type="default", filter_type=filter_type) }}">{{ "Default: No Sort" }}</option>
+            <option value="{{ url_for('director.view_directors_admin', sort_type="name", filter_type=filter_type) }}">{{ "Name" }}</option>
+            <option value="{{ url_for('director.view_directors_admin', sort_type="designation", filter_type=filter_type) }}">{{ "Designation" }}</option>
+            <option value="{{ url_for('director.view_directors_admin', sort_type="date_of_joining", filter_type=filter_type) }}">{{ "Joining Date" }}</option>
         </select>
     </label>
     <label class="input-group-addon glyphicon glyphicon-filter" style="width: 50px;">
         <select class="selectpicker" onchange="location = this.value;">
             <option>Filter</option>
-            <option value="{{ url_for('admin.view_directors_admin', sort_type=sort_type, filter_type="default") }}">{{ "All" }}</option>
+            <option value="{{ url_for('director.view_directors_admin', sort_type=sort_type, filter_type="default") }}">{{ "All" }}</option>
             <option disabled>Name of Directors</option>
             {% for directoe in directors_response %}
-                <option value="{{ url_for('admin.view_directors_admin', sort_type=sort_type, filter_type=director) }}">{{ director }}</option>
+                <option value="{{ url_for('director.view_directors_admin', sort_type=sort_type, filter_type=director) }}">{{ director }}</option>
             {% endfor %}
             <option disabled>Departments</option>
             {% for dept in department_response %}
-                <option value="{{ url_for('admin.view_directors_admin', sort_type=sort_type, filter_type="department"+dept['_id']) }}">{{ dept['name'] }}</option>
+                <option value="{{ url_for('director.view_directors_admin', sort_type=sort_type, filter_type="department"+dept['_id']) }}">{{ dept['name'] }}</option>
             {% endfor %}
         </select>
     </label>
@@ -49,8 +49,8 @@
                     <td>{{ director['designation'] }}</td>
                     <td>{{ director['date_of_joining'] }}</td>
 {#                    <td>{{ director['_id'] }}</td>#}
-                    <td><a class="btn btn-warning" href="{{ url_for('admin.admin_edit_director', director_id=director['_id']) }}"> Edit Director</a></td>
-                    <td><a class="btn btn-danger" href="{{ url_for('admin.admin_delete_director', director_id=director['_id']) }}">Delete Director</a> </td>
+                    <td><a class="btn btn-warning" href="{{ url_for('director.admin_edit_director', director_id=director['_id']) }}"> Edit Director</a></td>
+                    <td><a class="btn btn-danger" href="{{ url_for('director.admin_delete_director', director_id=director['_id']) }}">Delete Director</a> </td>
                 </tr>
             {% endfor %}
             <tbody>

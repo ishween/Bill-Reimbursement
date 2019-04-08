@@ -11,6 +11,7 @@ import src.models.bills.error as BillErrors
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 import src.decorators as bills_decorators
+import matplotlib.pyplot as plt
 
 bill_blueprint = Blueprint('bills', __name__)
 
@@ -30,8 +31,38 @@ def view_bills(sort_type, filter_type):
         sorted_bills = sorted(filter_bills, key=lambda k: k[sort_type])
     else:
         sorted_bills = filter_bills
-    return render_template('employees/view_bills.html', bills=sorted_bills, sort_type=sort_type, filter_type=filter_type)
 
+    url = view_employee_bill_pie(employee['_id'])
+    return render_template('employees/view_bills.html', bills=sorted_bills, sort_type=sort_type, filter_type=filter_type, url=url)
+
+
+def view_employee_bill_pie(employee_id):
+    bills = Bill.all_bills_for_employee(employee_id)
+
+    accept = reject = pending = 0
+    for bill in bills:
+        if bill['status'] == 'accept':
+            accept = accept + 1
+        elif bill['status'] == 'reject':
+            reject = reject + 1
+        else:
+            pending = pending + 1
+    labels = "Pending", "Accept", "Reject"
+    sum = accept + pending + reject
+    sizes = [pending / sum, accept / sum, reject / sum]
+    colors = ['gold', 'yellowgreen', 'lightskyblue']
+    fig1, ax1 = plt.subplots()
+    ax1.pie(sizes, labels=labels, colors=colors, autopct='%.0f%%',
+            shadow=True, startangle=90, radius=0.5)
+    ax1.axis('equal')
+    plt.savefig('plot.png')
+
+    upload_result = upload('plot.png')
+    url = upload_result['url']
+    thumbnail_url1, options = cloudinary_url(upload_result['public_id'], format="png", crop="fill", width=100,
+                                                     height=100)
+    # plt.show()
+    return url
 
 @bill_blueprint.route('/add', methods=['GET', 'POST'])
 @bills_decorators.requires_login
