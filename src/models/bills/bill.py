@@ -2,6 +2,7 @@ import uuid
 from src.db.database import Database
 import src.models.bills.constants as billConstant
 import src.models.bills.error as billError
+import matplotlib.pyplot as plt
 
 
 class Bill(object):
@@ -110,3 +111,14 @@ class Bill(object):
             raise billError.ReimbursementAmountNotAdded("Add Reimbursement Amount")
         else:
             return True
+
+    def graph(accept, pending, reject):
+
+        labels = "Pending", "Accept", "Reject"
+        sizes = [pending / 100, accept / 100, reject / 100]
+        # print(sizes)
+        fig1, ax1 = plt.subplots()
+        ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
+                shadow=True, startangle=90)
+        ax1.axis('equal')
+        plt.savefig('plot.png')

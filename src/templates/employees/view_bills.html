@@ -1,28 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <div class="reset">
-        <a class="btn btn-warning" href="{{ url_for('employees.reset_password') }}">Reset Password</a>
-        <a class="btn btn-success" href="{{ url_for('bills.add_bill') }}"><span class="glyphicon glyphicon-plus"></span> Add Bill</a>
-    </div>
-    <h1>Bills</h1>
+    <h3>Bills <a class="btn btn-warning reset" href="{{ url_for('employees.reset_password') }}">Reset Password</a></h3>
+    <a class="pie-chart" href="{{ url }}">status<span class="glyphicon glyphicon-triangle-right"></span><img src="{{ url }}" alt="Image" width="250" height="150"></a>
     <label class="input-group-addon glyphicon glyphicon-sort" style="width: 50px;">
-            <select class="selectpicker glyphicon glyphicon-sort" onchange="location = this.value;">
-                <option>Sort</option>
-                <option value="{{ url_for('bills.view_bills', sort_type="default", filter_type=filter_type) }}">{{ "Default" }}</option>
-                <option value="{{ url_for('bills.view_bills', sort_type="bill_type", filter_type=filter_type) }}">{{ "Type" }}</option>
-                <option value="{{ url_for('bills.view_bills', sort_type="date_of_submission", filter_type=filter_type) }}">{{ "Submission Date" }}</option>
-            </select>
-        </label>
-        <label class="input-group-addon glyphicon glyphicon-filter" style="width: 50px;">
-            <select class="selectpicker" onchange="location = this.value;" aria-live="polite">
-                <option class="glyphicon glyphicon-filter">Filter</option>
-                <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="all") }}">{{ "All" }}</option>
-                <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="pending") }}">{{ "Pending" }}</option>
-                <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="accept") }}">{{ "Accept" }}</option>
-                <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="reject") }}">{{ "Reject" }}</option>
-            </select>
-        </label>
+        <select class="selectpicker glyphicon glyphicon-sort" onchange="location = this.value;">
+            <option>Sort</option>
+            <option value="{{ url_for('bills.view_bills', sort_type="default", filter_type=filter_type) }}">{{ "Default" }}</option>
+            <option value="{{ url_for('bills.view_bills', sort_type="bill_type", filter_type=filter_type) }}">{{ "Type" }}</option>
+            <option value="{{ url_for('bills.view_bills', sort_type="date_of_submission", filter_type=filter_type) }}">{{ "Submission Date" }}</option>
+        </select>
+    </label>
+    <label class="input-group-addon glyphicon glyphicon-filter" style="width: 50px;">
+        <select class="selectpicker" onchange="location = this.value;" aria-live="polite">
+            <option class="glyphicon glyphicon-filter">Filter</option>
+            <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="all") }}">{{ "All" }}</option>
+            <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="pending") }}">{{ "Pending" }}</option>
+            <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="accept") }}">{{ "Accept" }}</option>
+            <option value="{{ url_for('bills.view_bills', sort_type=sort_type, filter_type="reject") }}">{{ "Reject" }}</option>
+        </select>
+    </label>
+    <br><a class="btn btn-success" href="{{ url_for('bills.add_bill') }}"><span class="glyphicon glyphicon-plus"></span> Add Bill</a>
+
     <table class="table table-hover">
         <thead>
         <tr>
