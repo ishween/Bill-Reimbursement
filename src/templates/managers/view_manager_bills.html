@@ -1,8 +1,8 @@
 {% extends "managers/manager_bar.html" %}
 {% block content %}
 
-    <h1>Bills <a class="btn btn-success add" href="{{ url_for('bills.add_bill') }}"><span class="glyphicon glyphicon-plus"></span> Add Bill</a>
-</h1>
+    <h3>Bills</h3>
+    <a class="pie-chart" href="{{ url }}">status<span class="glyphicon glyphicon-triangle-right"></span><img src="{{ url }}" alt="Image" width="250" height="150"></a>
     <label class="input-group-addon glyphicon glyphicon-sort" style="width: 50px;">
             <select class="selectpicker glyphicon glyphicon-sort" onchange="location = this.value;">
                 <option>Sort</option>
@@ -20,6 +20,8 @@
                 <option value="{{ url_for('bills.view_manager_bills', sort_type=sort_type, filter_type="reject") }}">{{ "Reject" }}</option>
             </select>
         </label>
+        <br><a class="btn btn-success" href="{{ url_for('bills.add_bill') }}"><span class="glyphicon glyphicon-plus"></span> Add Bill</a>
+
     <table class="table table-hover">
         <thead>
         <tr>
