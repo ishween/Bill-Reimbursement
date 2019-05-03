@@ -24,7 +24,7 @@ def view_bills(sort_type, filter_type):
     email = session['email']
     employee = Employee.get_by_employee_email(email)
     filter_bills = None
-    if filter_type == "all":
+    if filter_type == "all" or filter_type == 'None':
         filter_bills = Bill.all_bills_for_employee(employee['_id'])
     else:
         filter_bills = Bill.all_bills_for_employee_filter(employee['_id'], filter_type)
@@ -40,21 +40,27 @@ def view_bills(sort_type, filter_type):
 
 def view_bill_pie(_id):
     bills = Bill.all_bills_for_manager(_id)
+    # print(bills.count()) - to check if the pymongo cursor returned does not countain any value
+    if bills.count() == 0:
+        bills = Bill.all_bills_for_employee(_id)
 
     accept = reject = pending = 0
     for bill in bills:
+        print(bill)
         if bill['status'] == 'accept':
             accept = accept + 1
         elif bill['status'] == 'reject':
             reject = reject + 1
         else:
             pending = pending + 1
+
     sum = accept + pending + reject
+    print(sum, accept, reject, pending)
     if sum is not 0:
 
         labels = "Pending", "Accept", "Reject"
         sizes = [pending / sum, accept / sum, reject / sum]
-        pd.DataFrame(sizes, columns=labels)
+        # pd.DataFrame(sizes, columns=labels)
         colors = ['gold', 'yellowgreen', 'lightskyblue']
         fig1, ax1 = plt.subplots()
         ax1.pie(sizes, labels=labels, colors=colors, autopct='%.0f%%',
