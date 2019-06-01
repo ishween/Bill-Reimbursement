@@ -4,3 +4,4 @@ passlib==1.7.1
 cloudinary==1.15.0
 matplotlib==3.0.3
 pandas==0.24.2
+gunicorn==19.9.0
