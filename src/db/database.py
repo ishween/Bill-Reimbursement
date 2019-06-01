@@ -2,7 +2,8 @@ import pymongo
 
 
 class Database(object):
-    URI = "mongodb://127.0.0.1:27017"
+    # URI = "mongodb://127.0.0.1:27017"
+    URI = "mongodb://ishween:isha%401999@cluster0-shard-00-00-firjr.mongodb.net:27017,cluster0-shard-00-01-firjr.mongodb.net:27017,cluster0-shard-00-02-firjr.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority"
     DATABASE = None
 
     @staticmethod
