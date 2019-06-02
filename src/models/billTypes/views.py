@@ -13,6 +13,7 @@ billType_blueprint = Blueprint('billType', __name__)
 @billType_blueprint.route('/viewBillTypes/<string:sort_type>/<string:filter_type>', methods=['GET'])
 @bill_type_decorators.requires_login
 def view_bill_types_admin(sort_type, filter_type):
+    # Displays bill-type of the company to the admin
     company_id = get_by_email_company_id()
     departments = view_departments(company_id)
     response = []
@@ -74,6 +75,7 @@ def view_bill_types_admin(sort_type, filter_type):
 @billType_blueprint.route('/addBillType', methods=['GET', 'POST'])
 @bill_type_decorators.requires_login
 def add_a_bill_type():
+    # Admin add a bill-type of the company
     company_id = get_by_email_company_id()
     departments = view_departments(company_id)
     if request.method == 'POST':
@@ -89,6 +91,7 @@ def add_a_bill_type():
 
 @billType_blueprint.route('/edit/<string:billType_id>', methods=['GET', 'POST'])
 def edit_bill_type(billType_id):
+    # Admin edits bill-type
     billType = BillType.get_by_id(billType_id)
     if request.method == 'POST':
         reimbursement = request.form['reimbursement']
@@ -102,11 +105,13 @@ def edit_bill_type(billType_id):
 
 @billType_blueprint.route('/deleteBillType/<string:billType_id>', methods=['GET'])
 def delete_bill_type(billType_id):
+    # Admin delete the bill-type
     BillType.get_by_id(billType_id).delete()
     return redirect(url_for('billType.view_bill_types_admin', sort_type="default", filter_type="default"))
 
 
 def get_bills_type_by_department(department_id):
+    # get bill-types of a particular department
     billTypes = BillType.all(department_id)
     response = []
     for b in billTypes:
@@ -119,4 +124,5 @@ def get_bills_type_by_department(department_id):
 
 
 def get_bill_amount_by_department_and_type(department_id, bill_type):
+    # get bill amount of a particular department
     return BillType.get_amount(department_id, bill_type)['reimbursement']
