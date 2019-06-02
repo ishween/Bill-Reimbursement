@@ -14,6 +14,8 @@ manager_blueprint = Blueprint('manager', __name__)
 
 @manager_blueprint.route('/manager/login', methods = ['GET','POST'])
 def login_manager():
+    # Login manager by accessing email and password entered by the user
+
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -30,11 +32,16 @@ def login_manager():
 
 @manager_blueprint.route('/manager', methods=['GET'])
 def to_menu():
+    # Displays manager's menu page
+
     return render_template('managers/manager_menu.html')
+
 
 @manager_blueprint.route('/viewManagers/<string:sort_type>/<string:filter_type>', methods=['GET'])
 @manager_decorators.requires_login
 def view_managers_admin(sort_type, filter_type):
+    # Displays managers of the company to the admin
+
     company_id = get_by_email_company_id()
     #managers = view_managers(company_id)
     departments = view_departments(company_id)
@@ -95,6 +102,8 @@ def view_managers_admin(sort_type, filter_type):
 @manager_blueprint.route('/addManager', methods=['GET', 'POST'])
 @manager_decorators.requires_login
 def add_a_manager():
+    # Admin add a manager of the company
+
     company_id = get_by_email_company_id()
     departments = view_departments(company_id)
 
@@ -114,9 +123,9 @@ def add_a_manager():
 @manager_blueprint.route('/editManager/<string:manager_id>', methods = ['GET', 'POST'])
 @manager_decorators.requires_login
 def admin_edit_manager(manager_id):
+    # Admin edits a manager
     if request.method == 'POST':
         designation = request.form['designation']
-
         # edit_manager(designation, manager_id)
         manager = Manager.get_by_manager_id(manager_id)
         if designation != "":
@@ -129,6 +138,8 @@ def admin_edit_manager(manager_id):
 @manager_blueprint.route('/deleteManager/<string:manager_id>', methods=['GET'])
 @manager_decorators.requires_login
 def admin_delete_manager(manager_id):
+    # Admin delete a manager of the company
+
     # delete_manager(manager_id)
     Manager.get_by_manager_id(manager_id).delete()
     return redirect(url_for('manager.view_managers_admin', sort_type="default", filter_type="default"))
@@ -136,6 +147,7 @@ def admin_delete_manager(manager_id):
 
 @manager_blueprint.route('/manager/logout')
 def logout_admin():
+    # Manager logout from the session
     session['email'] = None
     print("logout")
     #return redirect(url_for('home'))
@@ -143,6 +155,8 @@ def logout_admin():
 
 @manager_blueprint.route('/manager/reset', methods = ['GET', 'POST'])
 def reset_password():
+    # reset old password
+
     if request.method == 'POST':
         email = session['email']
         old_password = request.form['old_password']
