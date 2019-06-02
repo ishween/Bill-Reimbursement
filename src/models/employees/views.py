@@ -14,6 +14,7 @@ employee_blueprint = Blueprint('employees', __name__)
 
 @employee_blueprint.route('/employee/login', methods=['GET', 'POST'])
 def login_employee():
+    # Login employee by accessing email and password entered by the user
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -30,6 +31,7 @@ def login_employee():
 
 @employee_blueprint.route('/employee/reset', methods = ['GET', 'POST'])
 def reset_password():
+    # reset old password
     if request.method == 'POST':
         email = session['email']
         old_password = request.form['old_password']
@@ -47,6 +49,7 @@ def reset_password():
 
 @employee_blueprint.route('/employee', methods=['GET'])
 def to_menu():
+    # Displays manager's menu page
     return render_template('employees/view_bills.html')
 
 
@@ -56,9 +59,11 @@ def logout_admin():
     print("logout")
     # return redirect(url_for('home'))
 
+
 @employee_blueprint.route('/viewEmployees/<string:sort_type>/<string:filter_type>', methods=['GET'])
 @employee_decorators.requires_login
 def view_employees_admin(sort_type, filter_type):
+    # Displays employees of the company to the admin
     company_id = get_by_email_company_id()
     departments = view_departments(company_id)
     response = []
@@ -114,6 +119,7 @@ def view_employees_admin(sort_type, filter_type):
 @employee_blueprint.route('/addEmployee', methods=['GET', 'POST'])
 @employee_decorators.requires_login
 def add_employee():
+    # Admin add a employee of the company
     company_id = get_by_email_company_id()
     departments = view_departments(company_id)
 
@@ -133,6 +139,7 @@ def add_employee():
 @employee_blueprint.route('/edit/<string:employee_id>', methods=['GET', 'POST'])
 @employee_decorators.requires_login
 def admin_edit_employee(employee_id):
+    # Admin edits a employee
     if request.method == 'POST':
         designation = request.form['designation']
         monthly_salary = request.form['monthly_salary']
@@ -156,6 +163,7 @@ def admin_edit_employee(employee_id):
 @employee_blueprint.route('/deleteEmployee/<string:employee_id>', methods=['GET'])
 @employee_decorators.requires_login
 def admin_delete_employee(employee_id):
+    # Admin delete a manager of the company
     # delete_employee(employee_id)
     Employee.get_by_employee_id(employee_id).delete()
     return redirect(url_for('employees.view_employees_admin', sort_type="default", filter_type="default"))
