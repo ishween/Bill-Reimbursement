@@ -1,2 +1,2 @@
-
+# Database name
 COLLECTION = "department"
