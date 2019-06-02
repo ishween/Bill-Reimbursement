@@ -14,6 +14,7 @@ director_blueprint = Blueprint('director', __name__)
 
 @director_blueprint.route('/login', methods = ['GET','POST'])
 def login_director():
+    # Login director by accessing email and password entered by the user
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -30,6 +31,7 @@ def login_director():
 
 @director_blueprint.route('/director/reset', methods = ['GET', 'POST'])
 def reset_password():
+    # reset old password
     if request.method == 'POST':
         email = session['email']
         old_password = request.form['old_password']
@@ -48,6 +50,7 @@ def reset_password():
 @director_blueprint.route('/viewDirectors/<string:sort_type>/<string:filter_type>', methods=['GET'])
 @director_decorators.requires_login
 def view_directors_admin(sort_type, filter_type):
+    # Displays directors of the company to the admin
     company_id = get_by_email_company_id()
     departments = view_departments(company_id)
     response = []
@@ -108,6 +111,7 @@ def view_directors_admin(sort_type, filter_type):
 @director_blueprint.route('/addDirector', methods=['GET', 'POST'])
 @director_decorators.requires_login
 def add_a_director():
+    # Admin add a director of the company
     company_id = get_by_email_company_id()
     departments = view_departments(company_id)
 
@@ -126,6 +130,7 @@ def add_a_director():
 @director_blueprint.route('/editDirector/<string:director_id>', methods = ['GET', 'POST'])
 @director_decorators.requires_login
 def admin_edit_director(director_id):
+    # Admin edits a director
     if request.method == 'POST':
         designation = request.form['designation']
 
@@ -141,6 +146,7 @@ def admin_edit_director(director_id):
 @director_blueprint.route('/deleteDirector/<string:director_id>', methods=['GET'])
 @director_decorators.requires_login
 def admin_delete_director(director_id):
+    # Admin delete a director of the company
     delete_director(director_id)
     return redirect(url_for('director.view_directors_admin', sort_type="default", filter_type="default"))
 
@@ -151,6 +157,7 @@ def delete_director(director_id):
 
 @director_blueprint.route('/director/logout')
 def logout_admin():
+    # Director logout from the session
     session['email'] = None
     print("logout")
     #return redirect(url_for('home'))
