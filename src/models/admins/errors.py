@@ -2,6 +2,9 @@ __author__ = 'ishween'
 
 
 class AdminErrors(Exception):
+    """
+        Class to handle Admin exceptions
+    """
     def __init__(self, message):
         self.message = message
 

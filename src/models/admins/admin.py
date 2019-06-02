@@ -6,6 +6,9 @@ from src.db.utils import Utils
 
 
 class Admin(object):
+    """
+        Class to perform admin specific functionality
+    """
     def __init__(self, company_name, ceo, email, password, contact, gst_no, _id=None):
         self.company_name = company_name
         self.ceo = ceo
@@ -20,11 +23,11 @@ class Admin(object):
 
     @staticmethod
     def register(company_name, ceo, email, password, contact, gst_no):
-        """
-        check company name if it exist then error
-        check email exist if it exist then error
-        :return: true if registered else false
-        """
+        # """
+        # registers the company for bill reimbursement
+        # :raises: company already registered, admin already registered
+        # :return: true if successfully registered
+        # """
         company_data = Database.find_one(adminConstant.COLLECTION, {"company_name":company_name})
         admin_data = Database.find_one(adminConstant.COLLECTION, {"email": email})
 
@@ -38,20 +41,14 @@ class Admin(object):
 
         return True
 
-    def save_to_db(self):
-        Database.insert(adminConstant.COLLECTION, self.json())
-
-    def json(self):
-        return {
-            "company_name": self.company_name,
-            "ceo": self.ceo,
-            "email": self.email,
-            "password": self.password,
-            "contact": self.contact,
-            "gst_no": self.gst_no
-        }
-
     def is_login_valid(email, password):
+        # """
+        # Checks if the entered credentials exist in database
+        # :param email: user entered
+        # :param password: user entered
+        # :raises: Admin not exist, incorrect password exception
+        # :return: True
+        # """
         admin_data = Database.find_one(adminConstant.COLLECTION, {"email":email})
 
         if admin_data is None:
@@ -61,8 +58,30 @@ class Admin(object):
 
         return True
 
+    def save_to_db(self):
+        # to save data to the manager's database
+        Database.insert(adminConstant.COLLECTION, self.json())
+
+    def json(self):
+        # creates the data structure
+        return {
+            "company_name": self.company_name,
+            "ceo": self.ceo,
+            "email": self.email,
+            "password": self.password,
+            "contact": self.contact,
+            "gst_no": self.gst_no
+        }
+
     @classmethod
     def is_reset_password_valid(cls, email, old_password):
+        # """
+        # It checks whether the credentials are valid and exist
+        # :param email: user email
+        # :param old_password: user entered
+        # :raise: Incorrect password exception
+        # :return: admins's data
+        # """
         admin_data = Database.find_one(adminConstant.COLLECTION, {'email': email})
         #print(manager_data['password'])
         if not Utils.check_hashed_password(old_password, admin_data['password']):
@@ -72,6 +91,7 @@ class Admin(object):
 
     @classmethod
     def get_by_email(cls, email):
+        # to get company ID using admin's email
         company_id = Database.find_one(adminConstant.COLLECTION, {'email':email})['_id']
         return company_id
 

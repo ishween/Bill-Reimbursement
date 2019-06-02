@@ -11,11 +11,14 @@ admin_blueprint = Blueprint('admin', __name__)
 
 
 def get_by_email_company_id():
+    # to get company ID using admin email
     print(Admin.get_by_email(session['email']))
     return Admin.get_by_email(session['email'])
 
+
 @admin_blueprint.route('/login', methods=['GET','POST'])
 def login_admin():
+    # Login admin by accessing email and password entered by the user
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -32,6 +35,7 @@ def login_admin():
 
 @admin_blueprint.route('/register', methods=['GET', 'POST'])
 def register_admin():
+    # register company and admin that will handle company updates
     if request.method == 'POST':
         company_name = request.form['company_name']
         ceo = request.form['ceo']
@@ -50,20 +54,16 @@ def register_admin():
     return render_template('admins/register.html')
 
 
-@admin_blueprint.route('/logout')
-def logout_admin():
-    session['email'] = None
-    return redirect(url_for('home'))
-
-
 @admin_blueprint.route('/menu', methods=['GET'])
 @admin_decorators.requires_login
 def to_menu():
+    # to display admin menu
     return render_template('admins/admin_menu.html')
 
 
 @admin_blueprint.route('/reset', methods = ['GET', 'POST'])
 def reset_password():
+    # reset old password
     if request.method == 'POST':
         email = session['email']
         old_password = request.form['old_password']
@@ -77,3 +77,10 @@ def reset_password():
             return error.message
 
     return render_template('admins/reset_password.html')
+
+
+@admin_blueprint.route('/logout')
+def logout_admin():
+    # to logout from session
+    session['email'] = None
+    return redirect(url_for('home'))
