@@ -2,6 +2,7 @@ import string
 import random
 import smtplib
 from email.mime.text import MIMEText
+from src.config import EMAIL, PASSWORD
 
 COLLECTION = "director"
 
@@ -10,10 +11,10 @@ def send_email(email, password):
     # to send mail
     s = smtplib.SMTP('smtp.gmail.com', 587)
     s.starttls()
-    s.login('ishweenk999@gmail.com', 'isha@1999')
+    s.login(EMAIL, PASSWORD)
     txt = "You have been added for bill reimbursement:" \
           "'Your username: {} and password: {}".format(email, password)
-    me = 'ishweenk999@gmail.com'
+    me = EMAIL
     msg = MIMEText(txt)
     msg['Subject'] = "You have been added for Bill Reimbursement"
     msg['From'] = me
