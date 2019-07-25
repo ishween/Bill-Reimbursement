@@ -3,7 +3,6 @@ __author__ = 'ishween'
 
 DEBUG = True
 
-
 CN_CLOUD_NAME = os.environ['CN_CLOUD_NAME']
 CN_API_KEY = os.environ['CN_API_KEY']
 CN_API_SECRET = os.environ['CN_API_SECRET']

@@ -9,7 +9,7 @@ COLLECTION = "director"
 
 def send_email(email, password):
     # to send mail
-    s = smtplib.SMTP('smtp.gmail.com', 587)
+    s = smtplib.SMTP('smtp.sendgrid.net', 587)
     s.starttls()
     s.login(EMAIL, PASSWORD)
     txt = "You have been added for bill reimbursement:" \

@@ -9,7 +9,7 @@ PORT = None
 URI = None
 DEBUG = True
 
-
+print(os.environ['environment'])
 if os.environ['environment'] != 'production':
     import src.config_local as config_local
     CN_CLOUD_NAME = config_local.CN_CLOUD_NAME

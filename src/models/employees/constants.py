@@ -12,7 +12,7 @@ def password_generator(size=8, chars=string.ascii_lowercase + string.ascii_upper
 
 
 def send_email(email, password):
-    s = smtplib.SMTP('smtp.gmail.com', 587)
+    s = smtplib.SMTP('smtp.sendgrid.net', 587)
     s.starttls()
     s.login(EMAIL, PASSWORD)
     txt = "You have been added for bill reimbursement:" \
