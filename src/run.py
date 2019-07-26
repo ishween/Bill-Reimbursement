@@ -1,20 +1,16 @@
+import sys
+
+sys.path.append(".")
 from src.app import app
-import os
-
-print("dekh le andhi ldki: ".upper(),os.environ['PYTHONPATH'])
-
-if 'PYTHONPATH' in os.environ:
-    oldEnvVar = os.environ['PYTHONPATH']
-else:
-    oldEnvVar = ""
-
-oldEnvVar += ":."
-os.environ['PYTHONPATH'] = oldEnvVar
-
-port = 5000
-if 'PORT' in os.environ:
-    port = os.environ['PORT']
+import cloudinary.api
+from src.config import PORT, CN_CLOUD_NAME, CN_API_SECRET, CN_API_KEY
 
 __author__ = 'ishween'
 
-app.run(debug=app.config['DEBUG'], port=port,host='0.0.0.0')
+cloudinary.config(
+    cloud_name=CN_CLOUD_NAME,
+    api_key=CN_API_KEY,
+    api_secret=CN_API_SECRET
+)
+
+app.run(debug=app.config['DEBUG'], port=PORT, host='0.0.0.0')

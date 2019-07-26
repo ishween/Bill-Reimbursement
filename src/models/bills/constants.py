@@ -1,5 +1,6 @@
 import smtplib
 from email.mime.text import MIMEText
+from src.config import EMAIL, PASSWORD
 
 COLLECTION = "bills"
 
@@ -7,12 +8,12 @@ COLLECTION = "bills"
 def send_email(email, reimburse, status):
     s = smtplib.SMTP('smtp.gmail.com', 587)
     s.starttls()
-    s.login('ishweenk999@gmail.com', 'isha@1999')
+    s.login(EMAIL, PASSWORD)
     if status == "accept":
         txt = "Your bill is accepted with reimbursement amount of Rs.{}".format(reimburse)
     else:
         txt = "Your bill has been rejected"
-    me = 'ishweenk999@gmail.com'
+    me = EMAIL
     msg = MIMEText(txt)
     msg['Subject'] = 'Your bill status has been updated'
     msg['From'] = me
