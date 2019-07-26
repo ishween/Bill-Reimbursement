@@ -8,6 +8,7 @@ from src.models.managers.manager import Manager
 from src.models.directors.director import Director
 from src.models.department.department import Department
 import src.models.bills.error as BillErrors
+import src.models.employees.error as EmployeeErrors
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 import src.decorators as bills_decorators
@@ -176,7 +177,10 @@ def view_bills_to_manager(sort_type, filter_type):
         filter_bills = Bill.all_bills(manager['department_id'], filter_type)
     response = []
     for bill in filter_bills:
-        if 'employee_id' in bill.keys():
+        print("Bill:",bill)
+        if bill['employee_id'] is not None:
+        # if 'employee_id' in bill.keys():
+            print(bill['employee_id'])
             res={}
             res['_id'] = bill['_id']
             res['bill_type'] = bill['bill_type']
@@ -185,10 +189,13 @@ def view_bills_to_manager(sort_type, filter_type):
             res['date_of_submission'] = bill['date_of_submission']
             res['status'] = bill['status']
             employee_id = bill['employee_id']
-            try:
-                employee = Employee.get_by_employee_id(employee_id)
-            except BillErrors.NoBills as a:
-                raise a.message
+            # try:
+            #     employee = Employee.get_by_employee_id(employee_id)
+            # except EmployeeErrors.EmployeeNotExistError as a:
+            #     return a.message
+            employee = Employee.get_by_employee_id(employee_id)
+            if employee is None:
+                return "Not found"
             res['employee_name'] = employee.name
             res['employee_designation'] = employee.designation
             department = Department.get_by_id(bill['department_id'])
@@ -216,7 +223,8 @@ def view_bills_to_director(sort_type, filter_type):
         filter_bills = Bill.all_bills(director['department_id'], filter_type)
     response = []
     for bill in filter_bills:
-        if 'manager_id' in bill.keys():
+        if bill['manager_id'] is not None:
+        # if 'manager_id' in bill.keys():
             res={}
             res['_id'] = bill['_id']
             res['bill_type'] = bill['bill_type']

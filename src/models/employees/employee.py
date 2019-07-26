@@ -97,8 +97,17 @@ class Employee(object):
 
     @classmethod
     def get_by_employee_id(cls, _id):
+        print("Emp id:",_id)
         # given the employee's ID and returns the particular employee's details
-        return cls(**Database.find_one(employeeConstants.COLLECTION,{'_id':_id}))
+        # return cls(**Database.find_one(employeeConstants.COLLECTION,{'_id':_id}))
+        response = Database.find_one(employeeConstants.COLLECTION, {'_id': _id})
+        print("he is mad", response)
+        if response is None:
+            return None
+            # raise EmployeeError.EmployeeNotExistError
+        else:
+            print(cls(**response))
+            return cls(**response)
 
     def update_to_db(self):
         # to update particular employee details
