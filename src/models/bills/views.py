@@ -185,7 +185,10 @@ def view_bills_to_manager(sort_type, filter_type):
             res['date_of_submission'] = bill['date_of_submission']
             res['status'] = bill['status']
             employee_id = bill['employee_id']
-            employee = Employee.get_by_employee_id(employee_id)
+            try:
+                employee = Employee.get_by_employee_id(employee_id)
+            except BillErrors.NoBills as a:
+                raise a.message
             res['employee_name'] = employee.name
             res['employee_designation'] = employee.designation
             department = Department.get_by_id(bill['department_id'])
