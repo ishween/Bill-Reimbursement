@@ -36,6 +36,7 @@ class Bill(object):
         return {
             "_id": self._id,
             "employee_id": self.employee_id,
+            "manager_id": self.manager_id,
             "bill_type": self.bill_type,
             "department_id": self.department_id,
             "date_of_submission": self.date_of_submission,
@@ -46,6 +47,7 @@ class Bill(object):
     def manager_json(self):
         return {
             "_id": self._id,
+            "employee_id": self.employee_id,
             "manager_id": self.manager_id,
             "bill_type": self.bill_type,
             "department_id": self.department_id,
