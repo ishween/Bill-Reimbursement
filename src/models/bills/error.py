@@ -6,3 +6,6 @@ class BillErrors(Exception):
 
 class ReimbursementAmountNotAdded(BillErrors):
     pass
+
+class NoBills(BillErrors):
+    pass
