@@ -6,7 +6,8 @@ COLLECTION = "bills"
 
 
 def send_email(email, reimburse, status):
-    s = smtplib.SMTP('smtp.gmail.com', 587)
+    s = smtplib.SMTP('smtp.sendgrid.net', 587)
+    # smtp.gmail.com
     s.starttls()
     s.login(EMAIL, PASSWORD)
     if status == "accept":
