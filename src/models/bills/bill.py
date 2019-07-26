@@ -106,7 +106,7 @@ class Bill(object):
 
     def manager_update_to_db(self):
         print(self.manager_json())
-        Database.update(billConstant.COLLECTION, {'_id':self._id}, self.manager_json)
+        Database.update(billConstant.COLLECTION, {'_id':self._id}, self.manager_json())
 
     def isReimbursementAdded(reimbursement_amount):
         if reimbursement_amount == "":
