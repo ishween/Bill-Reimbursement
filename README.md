@@ -25,8 +25,10 @@ https://billreimbursement.herokuapp.com/
 ## Major Entities
 This system includes three major entities:  
 
-- **Admin** - Manages departments their bill types, managers and employees of the company.    
-- **Manager** - Review, Acept or Reject application of employee under their department.  
+- **Admin** - Manages departments their bill types, managers and employees of the company.  
+- **Director** - Reviewm Accept, Reject bills of managers under their department.  
+- **Manager** - Review, Accept or Reject bills of employee under their department.  
+              - Add, Update or Delete bills for reimbursment.  
 - **Employee** - Add, Update or Delete bills for reimbursement.  
 
 ---
