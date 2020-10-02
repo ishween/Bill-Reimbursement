@@ -15,8 +15,8 @@ https://billreimbursement.herokuapp.com/
 
 ## Technologies
 
-- Python (Flask framework)
-- MongoDB for database (hosted)
+- Python (Flask Framework)
+- MongoDB for database (Hosted)
 - SendGrid for E-Mail service
 - Jinja for Server-Templating
 
